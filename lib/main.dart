@@ -1,4 +1,4 @@
-import 'package:chat_app/view/home_screen/home_screen.dart';
+import 'package:chat_app/view/auth_screen/login_screen.dart';
 import 'package:flutter/material.dart';
 
 void main() {
@@ -19,7 +19,7 @@ class MyApp extends StatelessWidget {
               centerTitle: true,
               backgroundColor: Colors.blue,
               iconTheme: IconThemeData(color: Colors.white, size: 28))),
-      home: const HomeScreen(),
+      home: const UserLoginScreen(),
     );
   }
 }
