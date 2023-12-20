@@ -1,10 +1,12 @@
+import 'package:chat_app/services/auth_services.dart';
+import 'package:chat_app/view/auth_screen/widgets/otp_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'widgets/decorations.dart';
 
 class UserLoginScreen extends StatelessWidget {
-  const UserLoginScreen({super.key});
-
+  UserLoginScreen({super.key});
+  final TextEditingController numberController = TextEditingController();
   @override
   Widget build(BuildContext context) {
     final GlobalKey<FormState> formKey = GlobalKey<FormState>();
@@ -42,56 +44,22 @@ class UserLoginScreen extends StatelessWidget {
               child: Column(
                 children: [
                   TextFormField(
+                    controller: numberController,
+                    validator: (value) {
+                      if (value == null || value.isEmpty) {
+                        return 'Please enter a Phone number';
+                      } else {
+                        return null;
+                      }
+                    },
                     autovalidateMode: AutovalidateMode.onUserInteraction,
                     decoration: inputDecration(
-                      'E-Mail',
-                      Icons.mail_outlined,
+                      'Phone Number',
+                      Icons.phone,
                     ),
                   ),
                   const SizedBox(
-                    height: 15,
-                  ),
-                  TextFormField(
-                    obscureText: true,
-                    autovalidateMode: AutovalidateMode.onUserInteraction,
-                    decoration: InputDecoration(
-                        border: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(10)),
-                        labelText: 'Password',
-                        labelStyle: const TextStyle(
-                            fontWeight: FontWeight.w500, color: Colors.black),
-                        prefixIcon: const Icon(Icons.password),
-                        suffixIcon: IconButton(
-                            onPressed: () {},
-                            icon: const Icon(Icons.password_rounded))),
-                  ),
-                  const SizedBox(
-                    height: 5,
-                  ),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      Row(
-                        children: [
-                          Checkbox(
-                              shape: RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.circular(3)),
-                              activeColor: Colors.blue.shade700,
-                              value: true,
-                              onChanged: (value) {}),
-                          const Text(
-                            'Remember',
-                            style: TextStyle(fontWeight: FontWeight.w500),
-                          )
-                        ],
-                      ),
-                      TextButton(
-                          onPressed: () {},
-                          child: const Text('Forgot  Passwords?')),
-                    ],
-                  ),
-                  const SizedBox(
-                    height: 10,
+                    height: 25,
                   ),
                   SizedBox(
                       height: 50,
@@ -102,8 +70,14 @@ class UserLoginScreen extends StatelessWidget {
                                   borderRadius: BorderRadius.circular(13)),
                               backgroundColor: Colors.blue.shade700),
                           onPressed: () {
-                            // if (formKey.currentState!.validate()) {
-                            // }
+                            if (formKey.currentState!.validate()) {
+                              Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                      builder: (context) => OtpScreen(
+                                            phoneNumber: numberController.text,
+                                          )));
+                            }
                           },
                           child: Text(
                             'Sign in',
@@ -112,31 +86,11 @@ class UserLoginScreen extends StatelessWidget {
                                 fontSize: 18,
                                 fontWeight: FontWeight.w600),
                           ))),
-                  const SizedBox(
-                    height: 15,
-                  ),
-                  SizedBox(
-                      height: 50,
-                      width: double.infinity,
-                      child: ElevatedButton(
-                          style: ElevatedButton.styleFrom(
-                              shape: RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.circular(13)),
-                              side: const BorderSide(color: Colors.grey),
-                              backgroundColor: Colors.white),
-                          onPressed: () {},
-                          child: Text(
-                            'Create Account',
-                            style: GoogleFonts.mali(
-                                color: Colors.black,
-                                fontSize: 17,
-                                fontWeight: FontWeight.w600),
-                          ))),
                 ],
               ),
             ),
             const SizedBox(
-              height: 30,
+              height: 25,
             ),
             const Row(
               children: [
@@ -171,7 +125,9 @@ class UserLoginScreen extends StatelessWidget {
                       border: Border.all(width: 1.5, color: Colors.grey),
                       borderRadius: BorderRadius.circular(100)),
                   child: IconButton(
-                      onPressed: () {},
+                      onPressed: () {
+                        AuthServices().signInWithGoogle();
+                      },
                       icon: const Image(
                           fit: BoxFit.cover,
                           height: 30,

@@ -1,7 +1,11 @@
-import 'package:chat_app/view/auth_screen/login_screen.dart';
+import 'package:chat_app/firebase_options.dart';
+import 'package:chat_app/view/auth_screen/auth_state.dart';
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 
-void main() {
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
   runApp(const MyApp());
 }
 
@@ -19,7 +23,7 @@ class MyApp extends StatelessWidget {
               centerTitle: true,
               backgroundColor: Colors.blue,
               iconTheme: IconThemeData(color: Colors.white, size: 28))),
-      home: UserLoginScreen(),
+      home: const AuthGateWay(),
     );
   }
 }

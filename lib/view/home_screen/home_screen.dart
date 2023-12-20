@@ -1,3 +1,4 @@
+import 'package:chat_app/services/auth_services.dart';
 import 'package:flutter/material.dart';
 
 class HomeScreen extends StatelessWidget {
@@ -20,7 +21,9 @@ class HomeScreen extends StatelessWidget {
       ),
       floatingActionButton: FloatingActionButton(
         backgroundColor: Colors.blue,
-        onPressed: () {},
+        onPressed: () {
+          AuthServices().sigOut();
+        },
         elevation: 0,
         tooltip: 'Message',
         splashColor: Colors.lightBlue,
