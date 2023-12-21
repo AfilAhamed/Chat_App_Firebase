@@ -1,16 +1,18 @@
-import 'package:chat_app/services/auth_services.dart';
-import 'package:chat_app/view/auth_screen/widgets/otp_screen.dart';
+import 'package:chat_app/controller/auth_controller.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:provider/provider.dart';
 import 'widgets/decorations.dart';
 
 class UserLoginScreen extends StatelessWidget {
-  UserLoginScreen({super.key});
-  final TextEditingController numberController = TextEditingController();
+  const UserLoginScreen({super.key});
   @override
   Widget build(BuildContext context) {
     final GlobalKey<FormState> formKey = GlobalKey<FormState>();
-
+    final provider = Provider.of<AuthController>(context);
+    // provider.numberController.selection = TextSelection.fromPosition(
+    //     TextPosition(offset: provider.numberController.length));
     return Scaffold(
       body: SafeArea(
         child: Padding(
@@ -44,19 +46,26 @@ class UserLoginScreen extends StatelessWidget {
               child: Column(
                 children: [
                   TextFormField(
-                    controller: numberController,
+                    keyboardType: TextInputType.number,
+                    maxLength: 10,
+                    controller: provider.numberController,
+                    inputFormatters: <TextInputFormatter>[
+                      FilteringTextInputFormatter.digitsOnly
+                    ],
+
                     validator: (value) {
                       if (value == null || value.isEmpty) {
                         return 'Please enter a Phone number';
+                      } else if (value.length < 10) {
+                        return 'Please enter a 10 Digit Number';
                       } else {
                         return null;
                       }
                     },
-                    autovalidateMode: AutovalidateMode.onUserInteraction,
-                    decoration: inputDecration(
-                      'Phone Number',
-                      Icons.phone,
-                    ),
+                    // autovalidateMode: AutovalidateMode.onUserInteraction,
+                    decoration: inputDecration('Enter a phone number', context,
+                        provider.numberController),
+                    // onChanged: provider.controllerValueUpdate,
                   ),
                   const SizedBox(
                     height: 25,
@@ -71,12 +80,8 @@ class UserLoginScreen extends StatelessWidget {
                               backgroundColor: Colors.blue.shade700),
                           onPressed: () {
                             if (formKey.currentState!.validate()) {
-                              Navigator.push(
-                                  context,
-                                  MaterialPageRoute(
-                                      builder: (context) => OtpScreen(
-                                            phoneNumber: numberController.text,
-                                          )));
+                              provider.loginWithPhone(
+                                  context, provider.numberController.text);
                             }
                           },
                           child: Text(
@@ -126,7 +131,7 @@ class UserLoginScreen extends StatelessWidget {
                       borderRadius: BorderRadius.circular(100)),
                   child: IconButton(
                       onPressed: () {
-                        AuthServices().signInWithGoogle();
+                        provider.loginWithGoogle();
                       },
                       icon: const Image(
                           fit: BoxFit.cover,

@@ -1,4 +1,4 @@
-import 'package:chat_app/view/auth_screen/login_screen.dart';
+import 'package:chat_app/view/login_screen/login_screen.dart';
 import 'package:chat_app/view/home_screen/home_screen.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
@@ -19,7 +19,7 @@ class AuthGateWay extends StatelessWidget {
             );
           }
 
-          return UserLoginScreen();
+          return const UserLoginScreen();
         });
   }
 }

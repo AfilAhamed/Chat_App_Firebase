@@ -1,11 +1,13 @@
-import 'package:chat_app/services/auth_services.dart';
+import 'package:chat_app/controller/auth_controller.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 class HomeScreen extends StatelessWidget {
   const HomeScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
+    final provider = Provider.of<AuthController>(context);
     return Scaffold(
       appBar: AppBar(
         title: const Text(
@@ -22,7 +24,7 @@ class HomeScreen extends StatelessWidget {
       floatingActionButton: FloatingActionButton(
         backgroundColor: Colors.blue,
         onPressed: () {
-          AuthServices().sigOut();
+          provider.signOut();
         },
         elevation: 0,
         tooltip: 'Message',

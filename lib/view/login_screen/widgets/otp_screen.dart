@@ -1,11 +1,14 @@
-import 'package:chat_app/view/auth_screen/login_screen.dart';
+import 'package:chat_app/view/login_screen/login_screen.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:pinput/pinput.dart';
 
 class OtpScreen extends StatelessWidget {
-  const OtpScreen({super.key, this.phoneNumber});
+  OtpScreen({super.key, this.phoneNumber, this.verificationId});
   final String? phoneNumber;
+  final String? verificationId;
 
+  final otpController = TextEditingController();
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -51,7 +54,8 @@ class OtpScreen extends StatelessWidget {
                         fontWeight: FontWeight.bold)),
               ),
               Pinput(
-                length: 4,
+                controller: otpController,
+                length: 6,
                 defaultPinTheme: PinTheme(
                     width: 56,
                     height: 60,
@@ -71,6 +75,22 @@ class OtpScreen extends StatelessWidget {
                         borderRadius: BorderRadius.circular(8),
                         border: Border.all(color: Colors.green))),
               ),
+              const SizedBox(
+                height: 20,
+              ),
+              ElevatedButton(
+                  onPressed: () async {
+                    final otp = otpController.text.trim();
+                    AuthCredential credential = PhoneAuthProvider.credential(
+                        smsCode: otp,
+                        verificationId: verificationId.toString());
+
+                    final User user = (await FirebaseAuth.instance
+                            .signInWithCredential(credential))
+                        .user!;
+                    print(user);
+                  },
+                  child: const Text('Verify'))
             ],
           ),
         ),
