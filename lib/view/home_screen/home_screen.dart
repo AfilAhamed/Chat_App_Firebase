@@ -1,5 +1,8 @@
+import 'dart:developer';
+
 import 'package:chat_app/controller/auth_controller.dart';
 import 'package:chat_app/view/home_screen/widgets/chat_user_card.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -22,13 +25,26 @@ class HomeScreen extends StatelessWidget {
               onPressed: () {}, icon: const Icon(Icons.more_vert_outlined))
         ],
       ),
-      body: ListView.builder(
-          physics: const BouncingScrollPhysics(),
-          padding: const EdgeInsets.only(top: 8.0),
-          itemCount: 5,
-          itemBuilder: (context, index) {
-            return const ChatUserCardWidget();
-          }),
+      body: StreamBuilder(
+        stream: FirebaseFirestore.instance.collection('users').snapshots(),
+        builder: (context, snapshoot) {
+          final data = snapshoot.data?.docs;
+          if (snapshoot.hasData) {
+            log('snapshotData$data');
+            for (var i in data!) {
+              log(i.data().toString());
+            }
+          }
+
+          return ListView.builder(
+              physics: const BouncingScrollPhysics(),
+              padding: const EdgeInsets.only(top: 8.0),
+              itemCount: 5,
+              itemBuilder: (context, index) {
+                return const ChatUserCardWidget();
+              });
+        },
+      ),
       floatingActionButton: FloatingActionButton(
         backgroundColor: Colors.blue,
         onPressed: () {
