@@ -11,8 +11,7 @@ class UserLoginScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     final GlobalKey<FormState> formKey = GlobalKey<FormState>();
     final provider = Provider.of<AuthController>(context);
-    // provider.numberController.selection = TextSelection.fromPosition(
-    //     TextPosition(offset: provider.numberController.length));
+
     return Scaffold(
       body: SafeArea(
         child: Padding(
@@ -52,7 +51,6 @@ class UserLoginScreen extends StatelessWidget {
                     inputFormatters: <TextInputFormatter>[
                       FilteringTextInputFormatter.digitsOnly
                     ],
-
                     validator: (value) {
                       if (value == null || value.isEmpty) {
                         return 'Please enter a Phone number';
@@ -62,10 +60,8 @@ class UserLoginScreen extends StatelessWidget {
                         return null;
                       }
                     },
-                    // autovalidateMode: AutovalidateMode.onUserInteraction,
                     decoration: inputDecration('Enter a phone number', context,
                         provider.numberController),
-                    // onChanged: provider.controllerValueUpdate,
                   ),
                   const SizedBox(
                     height: 25,
@@ -80,8 +76,7 @@ class UserLoginScreen extends StatelessWidget {
                               backgroundColor: Colors.blue.shade700),
                           onPressed: () {
                             if (formKey.currentState!.validate()) {
-                              provider.loginWithPhone(
-                                  context, provider.numberController.text);
+                              provider.loginWithPhone(context);
                             }
                           },
                           child: Text(

@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 
 class AuthController extends ChangeNotifier {
   final TextEditingController numberController = TextEditingController();
+  final TextEditingController otpController = TextEditingController();
 
   // country picker
   Country selectedCountry = Country(
@@ -21,10 +22,17 @@ class AuthController extends ChangeNotifier {
   );
 
   //login using phone number
-  loginWithPhone(context, phoneNumber) {
+  loginWithPhone(
+    context,
+  ) {
     AuthServices().loginWithPhoneNumber(
-        context, "+${selectedCountry.phoneCode}$phoneNumber");
+        context, "+${selectedCountry.phoneCode}${numberController.text}");
     notifyListeners();
+  }
+
+  //otp submition
+  Future<void> onOtpSumbit(verificationId) async {
+    await AuthServices().otpSumbit(otpController.text, verificationId);
   }
 
   //login using google

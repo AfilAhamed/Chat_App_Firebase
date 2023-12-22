@@ -36,6 +36,17 @@ class AuthServices {
     }
   }
 
+  //otp Submit
+  Future<void> otpSumbit(otpController, verificationId) async {
+    final otp = otpController.text.trim();
+    AuthCredential credential = PhoneAuthProvider.credential(
+        smsCode: otp, verificationId: verificationId.toString());
+
+    final User user =
+        (await FirebaseAuth.instance.signInWithCredential(credential)).user!;
+    log(user.toString());
+  }
+
   // login to the app using Google
   Future<UserCredential?> signInWithGoogle() async {
     try {
