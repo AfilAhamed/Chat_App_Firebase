@@ -1,6 +1,5 @@
-import 'dart:developer';
-
 import 'package:chat_app/controller/auth_controller.dart';
+import 'package:chat_app/model/user_model.dart';
 import 'package:chat_app/view/home_screen/widgets/chat_user_card.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
@@ -11,6 +10,7 @@ class HomeScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    List<UserModel> list = [];
     final provider = Provider.of<AuthController>(context);
     return Scaffold(
       appBar: AppBar(
@@ -29,11 +29,11 @@ class HomeScreen extends StatelessWidget {
         stream: FirebaseFirestore.instance.collection('users').snapshots(),
         builder: (context, snapshoot) {
           final data = snapshoot.data?.docs;
-          if (snapshoot.hasData) {
-            log('snapshotData$data');
-            for (var i in data!) {
-              log(i.data().toString());
-            }
+          list = data?.map((e) => UserModel.fromJson(e.data())).toList() ?? [];
+          if (snapshoot.connectionState == ConnectionState.waiting) {
+            return const Center(
+              child: CircularProgressIndicator(),
+            );
           }
 
           return ListView.builder(
@@ -41,7 +41,9 @@ class HomeScreen extends StatelessWidget {
               padding: const EdgeInsets.only(top: 8.0),
               itemCount: 5,
               itemBuilder: (context, index) {
-                return const ChatUserCardWidget();
+                return ChatUserCardWidget(
+                  userModel: list[index],
+                );
               });
         },
       ),

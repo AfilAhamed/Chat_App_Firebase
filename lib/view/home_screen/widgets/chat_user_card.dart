@@ -1,8 +1,9 @@
+import 'package:chat_app/model/user_model.dart';
 import 'package:flutter/material.dart';
 
 class ChatUserCardWidget extends StatelessWidget {
-  const ChatUserCardWidget({super.key});
-
+  const ChatUserCardWidget({super.key, required this.userModel});
+  final UserModel userModel;
   @override
   Widget build(BuildContext context) {
     return Card(
