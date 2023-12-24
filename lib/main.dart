@@ -21,7 +21,7 @@ class MyApp extends StatelessWidget {
         ChangeNotifierProvider(create: (context) => AuthController())
       ],
       child: MaterialApp(
-        title: 'Chat App',
+        title: 'ChatApp',
         debugShowCheckedModeBanner: false,
         theme: ThemeData(
             useMaterial3: true,
