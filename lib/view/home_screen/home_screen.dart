@@ -34,17 +34,21 @@ class HomeScreen extends StatelessWidget {
             return const Center(
               child: CircularProgressIndicator(),
             );
+          } else if (list.isEmpty) {
+            return const Center(
+              child: Text('No Chats Found'),
+            );
+          } else {
+            return ListView.builder(
+                physics: const BouncingScrollPhysics(),
+                padding: const EdgeInsets.only(top: 8.0),
+                itemCount: list.length,
+                itemBuilder: (context, index) {
+                  return ChatUserCardWidget(
+                    userModel: list[index],
+                  );
+                });
           }
-
-          return ListView.builder(
-              physics: const BouncingScrollPhysics(),
-              padding: const EdgeInsets.only(top: 8.0),
-              itemCount: 5,
-              itemBuilder: (context, index) {
-                return ChatUserCardWidget(
-                  userModel: list[index],
-                );
-              });
         },
       ),
       floatingActionButton: FloatingActionButton(
