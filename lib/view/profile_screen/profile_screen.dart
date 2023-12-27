@@ -20,7 +20,7 @@ class ProfileScreen extends StatelessWidget {
         ),
       ),
       body: Padding(
-        padding: EdgeInsets.symmetric(horizontal: mq.width * .05),
+        padding: EdgeInsets.symmetric(horizontal: mq.width * .04),
         child: Column(
           children: [
             SizedBox(
@@ -46,11 +46,48 @@ class ProfileScreen extends StatelessWidget {
               userModel.email,
               style: const TextStyle(color: Colors.black54, fontSize: 16),
             ),
+            SizedBox(
+              height: mq.height * .03,
+            ),
             TextFormField(
               initialValue: userModel.name,
-              decoration: const InputDecoration(border: OutlineInputBorder()),
+              decoration: InputDecoration(
+                  hintText: 'Name',
+                  prefixIcon: const Icon(Icons.person),
+                  border: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(14))),
+            ),
+            SizedBox(
+              height: mq.height * .02,
+            ),
+            TextFormField(
+              initialValue: userModel.about,
+              decoration: InputDecoration(
+                  hintText: 'About',
+                  prefixIcon: const Icon(Icons.info_outlined),
+                  border: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(14))),
             )
           ],
+        ),
+      ),
+      floatingActionButton: FloatingActionButton.extended(
+        backgroundColor: Colors.blue,
+        onPressed: () {
+          // provider.signOut();
+        },
+        elevation: 0,
+        tooltip: 'Message',
+        splashColor: Colors.lightBlue,
+        icon: const Icon(
+          Icons.logout_outlined,
+          color: Colors.white,
+          size: 29,
+        ),
+        label: const Text(
+          'Log Out',
+          style: TextStyle(
+              color: Colors.white, fontWeight: FontWeight.bold, fontSize: 16),
         ),
       ),
     );
