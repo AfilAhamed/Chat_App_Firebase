@@ -27,7 +27,9 @@ class HomeScreen extends StatelessWidget {
                 Navigator.push(
                     context,
                     MaterialPageRoute(
-                        builder: (context) => const ProfileScreen()));
+                        builder: (context) => ProfileScreen(
+                              userModel: list[0],
+                            )));
               },
               icon: const Icon(Icons.settings))
         ],
