@@ -19,6 +19,7 @@ class ChatUserCardWidget extends StatelessWidget {
             leading: ClipRRect(
               borderRadius: BorderRadius.circular(mq.height * .3),
               child: CachedNetworkImage(
+                fit: BoxFit.fill,
                 width: mq.height * .055,
                 height: mq.height * .055,
                 imageUrl: userModel.image,
