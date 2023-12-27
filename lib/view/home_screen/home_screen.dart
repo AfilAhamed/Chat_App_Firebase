@@ -1,6 +1,7 @@
 import 'package:chat_app/controller/auth_controller.dart';
 import 'package:chat_app/model/user_model.dart';
 import 'package:chat_app/view/home_screen/widgets/chat_user_card.dart';
+import 'package:chat_app/view/profile_screen/profile_screen.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -21,7 +22,14 @@ class HomeScreen extends StatelessWidget {
         leading: IconButton(onPressed: () {}, icon: const Icon(Icons.home)),
         actions: [
           IconButton(onPressed: () {}, icon: const Icon(Icons.search_rounded)),
-          IconButton(onPressed: () {}, icon: const Icon(Icons.settings))
+          IconButton(
+              onPressed: () {
+                Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                        builder: (context) => const ProfileScreen()));
+              },
+              icon: const Icon(Icons.settings))
         ],
       ),
       body: StreamBuilder(
