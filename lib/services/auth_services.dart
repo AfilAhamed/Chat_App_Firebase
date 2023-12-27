@@ -37,10 +37,11 @@ class AuthServices {
   }
 
   //otp Submit
-  Future<void> otpSumbit(otpController, verificationId) async {
-    final otp = otpController.text.trim();
+  Future<void> otpSumbit(String otpController, verificationId) async {
+    final String otp = otpController;
+    print(otp);
     AuthCredential credential = PhoneAuthProvider.credential(
-        smsCode: otp, verificationId: verificationId.toString());
+        smsCode: otp, verificationId: verificationId);
 
     final User user =
         (await FirebaseAuth.instance.signInWithCredential(credential)).user!;
