@@ -21,8 +21,7 @@ class HomeScreen extends StatelessWidget {
         leading: IconButton(onPressed: () {}, icon: const Icon(Icons.home)),
         actions: [
           IconButton(onPressed: () {}, icon: const Icon(Icons.search_rounded)),
-          IconButton(
-              onPressed: () {}, icon: const Icon(Icons.more_vert_outlined))
+          IconButton(onPressed: () {}, icon: const Icon(Icons.settings))
         ],
       ),
       body: StreamBuilder(
