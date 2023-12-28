@@ -46,9 +46,10 @@ class ProfileScreen extends StatelessWidget {
                   Positioned(
                     bottom: 0,
                     right: 0,
-                    child: ElevatedButton(
-                        style: ElevatedButton.styleFrom(
-                            shape: const CircleBorder()),
+                    child: MaterialButton(
+                        elevation: 1,
+                        color: Colors.white,
+                        shape: const CircleBorder(),
                         onPressed: () {},
                         child: const Icon(
                           Icons.edit,
