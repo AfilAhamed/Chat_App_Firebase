@@ -1,10 +1,8 @@
-import 'package:chat_app/controller/auth_controller.dart';
 import 'package:chat_app/model/user_model.dart';
 import 'package:chat_app/view/home_screen/widgets/chat_user_card.dart';
 import 'package:chat_app/view/profile_screen/profile_screen.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
 
 class HomeScreen extends StatelessWidget {
   const HomeScreen({super.key});
@@ -12,7 +10,6 @@ class HomeScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     List<UserModel> list = [];
-    final provider = Provider.of<AuthController>(context);
     return Scaffold(
       appBar: AppBar(
         title: const Text(
@@ -62,9 +59,7 @@ class HomeScreen extends StatelessWidget {
       ),
       floatingActionButton: FloatingActionButton(
         backgroundColor: Colors.blue,
-        onPressed: () {
-          provider.signOut();
-        },
+        onPressed: () {},
         elevation: 0,
         tooltip: 'Message',
         splashColor: Colors.lightBlue,

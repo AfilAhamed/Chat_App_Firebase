@@ -11,14 +11,13 @@ class AuthGateWay extends StatelessWidget {
     return StreamBuilder(
         stream: FirebaseAuth.instance.authStateChanges(),
         builder: (context, AsyncSnapshot<User?> snapshot) {
-          if (snapshot.hasData || snapshot.data != null) {
+          if (snapshot.hasData) {
             return const HomeScreen();
           } else if (snapshot.connectionState == ConnectionState.waiting) {
             return const Center(
               child: CircularProgressIndicator(color: Colors.blue),
             );
           }
-
           return const UserLoginScreen();
         });
   }

@@ -2,6 +2,9 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:chat_app/model/user_model.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+
+import '../../controller/auth_controller.dart';
 
 class ProfileScreen extends StatelessWidget {
   const ProfileScreen({super.key, required this.userModel});
@@ -10,6 +13,8 @@ class ProfileScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final provider = Provider.of<AuthController>(context);
+
     final mq = MediaQuery.of(context).size;
 
     return Scaffold(
@@ -125,7 +130,7 @@ class ProfileScreen extends StatelessWidget {
         shape: const StadiumBorder(),
         backgroundColor: Colors.blue,
         onPressed: () {
-          // provider.signOut();
+          provider.signOut();
         },
         elevation: 0,
         tooltip: 'Log Out',
