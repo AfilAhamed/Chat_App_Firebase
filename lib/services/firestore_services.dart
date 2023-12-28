@@ -5,13 +5,14 @@ import 'package:firebase_auth/firebase_auth.dart';
 class FireStoreServices {
   final FirebaseFirestore firestore = FirebaseFirestore.instance;
   final auth = FirebaseAuth.instance.currentUser;
+  static late UserModel me;
 
   // to check weather a user exists or not
   Future<bool> userExists() async {
     return (await firestore.collection('users').doc(auth!.uid).get()).exists;
   }
 
-  createUser() {
+  Future<void> createUser() {
     final time = DateTime.now().millisecondsSinceEpoch.toString();
     final userModel = UserModel(
         name: auth!.displayName.toString(),
@@ -25,5 +26,22 @@ class FireStoreServices {
         isOnline: false);
 
     return firestore.collection('users').doc(auth!.uid).set(userModel.toJson());
+  }
+
+  Future<void> getSelfInfo() async {
+    await firestore.collection('users').doc(auth!.uid).get().then((user) async {
+      if (user.exists) {
+        me = UserModel.fromJson(user.data()!);
+      } else {
+        await createUser().then((value) => getSelfInfo());
+      }
+    });
+  }
+
+  Stream<QuerySnapshot<Map<String, dynamic>>> getAllUsers() {
+    return firestore
+        .collection('users')
+        .where('id', isNotEqualTo: auth!.uid)
+        .snapshots();
   }
 }

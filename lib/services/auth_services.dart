@@ -1,5 +1,7 @@
 import 'dart:developer';
 import 'dart:io';
+import 'package:chat_app/services/firestore_services.dart';
+import 'package:chat_app/view/home_screen/home_screen.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:google_sign_in/google_sign_in.dart';
@@ -48,6 +50,8 @@ class AuthServices {
     log(user.toString());
   }
 
+  //***********************Google Auth*****************************//
+
   // login to the app using Google
   Future<UserCredential?> signInWithGoogle() async {
     try {
@@ -69,6 +73,28 @@ class AuthServices {
       return null;
     }
   }
+
+  // handleGoogleBtnClick(context) {
+  //   signInWithGoogle().then((user) async {
+  //     if (user != null) {
+  //       print('\nUser: ${user.user}');
+  //       print('\nUserAdditionalInfo: ${user.additionalUserInfo}');
+  //       if (await FireStoreServices().userExists()) {
+  //         Navigator.pushReplacement(
+  //           context,
+  //           MaterialPageRoute(builder: (_) => const HomeScreen()),
+  //         );
+  //       } else {
+  //         FireStoreServices().createUser().then((value) {
+  //           Navigator.pushReplacement(
+  //             context,
+  //             MaterialPageRoute(builder: (_) => const HomeScreen()),
+  //           );
+  //         });
+  //       }
+  //     }
+  //   });
+  // }
 
   //signOut from the app
   Future<void> signOutUserAccount() async {

@@ -1,11 +1,23 @@
 import 'package:chat_app/model/user_model.dart';
+import 'package:chat_app/services/firestore_services.dart';
 import 'package:chat_app/view/home_screen/widgets/chat_user_card.dart';
 import 'package:chat_app/view/profile_screen/profile_screen.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 
-class HomeScreen extends StatelessWidget {
+class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
+
+  @override
+  State<HomeScreen> createState() => _HomeScreenState();
+}
+
+class _HomeScreenState extends State<HomeScreen> {
+  @override
+  void initState() {
+    super.initState();
+    FireStoreServices().getSelfInfo();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -25,14 +37,14 @@ class HomeScreen extends StatelessWidget {
                     context,
                     MaterialPageRoute(
                         builder: (context) => ProfileScreen(
-                              userModel: list[0],
+                              userModel: FireStoreServices.me,
                             )));
               },
               icon: const Icon(Icons.settings))
         ],
       ),
       body: StreamBuilder(
-        stream: FirebaseFirestore.instance.collection('users').snapshots(),
+        stream: FireStoreServices().getAllUsers(),
         builder: (context, snapshoot) {
           final data = snapshoot.data?.docs;
           list = data?.map((e) => UserModel.fromJson(e.data())).toList() ?? [];
