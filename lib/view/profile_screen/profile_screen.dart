@@ -62,7 +62,9 @@ class ProfileScreen extends StatelessWidget {
                             elevation: 1,
                             color: Colors.white,
                             shape: const CircleBorder(),
-                            onPressed: () {},
+                            onPressed: () {
+                              Dailogas().showBottomSheet(context);
+                            },
                             child: const Icon(
                               Icons.edit,
                               color: Colors.blue,

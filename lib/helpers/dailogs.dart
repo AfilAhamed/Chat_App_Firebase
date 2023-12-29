@@ -13,4 +13,22 @@ class Dailogas {
               child: CircularProgressIndicator(),
             ));
   }
+
+  showBottomSheet(context) {
+    showModalBottomSheet(
+        shape: const RoundedRectangleBorder(
+            borderRadius: BorderRadius.only(
+                topLeft: Radius.circular(20), topRight: Radius.circular(20))),
+        context: context,
+        builder: (builder) {
+          return ListView(
+            children: const [
+              Text(
+                'Pick a Profile Picture',
+                style: TextStyle(fontSize: 20),
+              )
+            ],
+          );
+        });
+  }
 }
