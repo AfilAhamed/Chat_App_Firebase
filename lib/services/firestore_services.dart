@@ -44,4 +44,11 @@ class FireStoreServices {
         .where('id', isNotEqualTo: auth!.uid)
         .snapshots();
   }
+
+  Future updateUserInfo() async {
+    return await firestore
+        .collection('users')
+        .doc(auth!.uid)
+        .update({'name': me.name, 'about': me.about});
+  }
 }

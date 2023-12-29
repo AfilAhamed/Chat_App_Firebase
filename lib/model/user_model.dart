@@ -1,13 +1,13 @@
 class UserModel {
-  late final String name;
-  late final String about;
-  late final String image;
-  late final String createdAt;
-  late final String id;
-  late final String lastActive;
-  late final String email;
-  late final String pushToken;
-  late final bool isOnline;
+  late String name;
+  late String about;
+  late String image;
+  late String createdAt;
+  late String id;
+  late String lastActive;
+  late String email;
+  late String pushToken;
+  late bool isOnline;
 
   UserModel(
       {required this.name,

@@ -2,7 +2,8 @@ import 'package:flutter/material.dart';
 
 class Dailogas {
   showSnackBar(context, msg) {
-    ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(msg)));
+    ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(behavior: SnackBarBehavior.floating, content: Text(msg)));
   }
 
   showProgresIndicator(context) {
