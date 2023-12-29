@@ -1,8 +1,11 @@
+import 'package:chat_app/controller/search_controller.dart';
 import 'package:chat_app/model/user_model.dart';
 import 'package:chat_app/services/firestore_services.dart';
 import 'package:chat_app/view/home_screen/widgets/chat_user_card.dart';
 import 'package:chat_app/view/profile_screen/profile_screen.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -20,16 +23,28 @@ class _HomeScreenState extends State<HomeScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final searchProvider = Provider.of<SearchUserController>(context);
     List<UserModel> list = [];
     return Scaffold(
       appBar: AppBar(
-        title: const Text(
-          'ChatApp',
-          style: TextStyle(color: Colors.white, fontWeight: FontWeight.w600),
-        ),
+        title: searchProvider.isSearching
+            ? TextFormField()
+            : const Text(
+                'ChatApp',
+                style:
+                    TextStyle(color: Colors.white, fontWeight: FontWeight.w600),
+              ),
         leading: IconButton(onPressed: () {}, icon: const Icon(Icons.home)),
         actions: [
-          IconButton(onPressed: () {}, icon: const Icon(Icons.search_rounded)),
+          IconButton(
+              onPressed: () {
+                setState(() {
+                  searchProvider.isSearching = !searchProvider.isSearching;
+                });
+              },
+              icon: Icon(searchProvider.isSearching
+                  ? CupertinoIcons.clear_circled_solid
+                  : Icons.search_rounded)),
           IconButton(
               onPressed: () {
                 Navigator.push(

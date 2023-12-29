@@ -1,4 +1,5 @@
 import 'package:chat_app/controller/auth_controller.dart';
+import 'package:chat_app/controller/search_controller.dart';
 import 'package:chat_app/firebase_options.dart';
 import 'package:chat_app/view/auth_screen/auth_state.dart';
 import 'package:firebase_core/firebase_core.dart';
@@ -18,7 +19,8 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MultiProvider(
       providers: [
-        ChangeNotifierProvider(create: (context) => AuthController())
+        ChangeNotifierProvider(create: (context) => AuthController()),
+        ChangeNotifierProvider(create: (context) => SearchUserController())
       ],
       child: MaterialApp(
         title: 'ChatApp',
