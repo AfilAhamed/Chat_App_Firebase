@@ -2,7 +2,6 @@ import 'package:chat_app/model/user_model.dart';
 import 'package:chat_app/services/firestore_services.dart';
 import 'package:chat_app/view/home_screen/widgets/chat_user_card.dart';
 import 'package:chat_app/view/profile_screen/profile_screen.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 
 class HomeScreen extends StatefulWidget {
