@@ -5,6 +5,7 @@ import 'package:chat_app/view/home_screen/widgets/chat_user_card.dart';
 import 'package:chat_app/view/profile_screen/profile_screen.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
 
 class HomeScreen extends StatefulWidget {
@@ -40,6 +41,9 @@ class _HomeScreenState extends State<HomeScreen> {
         },
         child: Scaffold(
           appBar: AppBar(
+            systemOverlayStyle: const SystemUiOverlayStyle(
+              systemNavigationBarColor: Colors.white, // Navigation bar
+            ),
             title: searchProvider.isSearching
                 ? TextFormField(
                     onChanged: (value) {

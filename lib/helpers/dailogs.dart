@@ -43,14 +43,14 @@ class Dailogas {
                           shape: const CircleBorder(),
                           fixedSize: Size(mq.width * .3, mq.height * .15)),
                       onPressed: () {},
-                      child: Image.asset('assets/google-logo.png')),
+                      child: Image.asset('assets/add_image.png')),
                   ElevatedButton(
                       style: ElevatedButton.styleFrom(
                           backgroundColor: Colors.white,
                           shape: const CircleBorder(),
                           fixedSize: Size(mq.width * .3, mq.height * .15)),
                       onPressed: () {},
-                      child: Image.asset('assets/google-logo.png')),
+                      child: Image.asset('assets/camera.png')),
                 ],
               )
             ],
