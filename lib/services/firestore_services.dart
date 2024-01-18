@@ -12,6 +12,7 @@ class FireStoreServices {
     return (await firestore.collection('users').doc(auth!.uid).get()).exists;
   }
 
+  //create user
   Future<void> createUser() {
     final time = DateTime.now().millisecondsSinceEpoch.toString();
     final userModel = UserModel(

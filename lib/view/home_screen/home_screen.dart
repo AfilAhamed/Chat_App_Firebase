@@ -140,7 +140,7 @@ class _HomeScreenState extends State<HomeScreen> {
             backgroundColor: Colors.blue,
             onPressed: () {},
             elevation: 0,
-            tooltip: 'Message',
+            tooltip: 'Messages',
             splashColor: Colors.lightBlue,
             child: const Icon(
               Icons.message_rounded,
