@@ -36,15 +36,59 @@ class _ChatScreenState extends State<ChatScreen> {
                 width: mq.width * 0.04,
               ),
               Column(
+                mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   Text(
                     widget.user.name,
-                    style: TextStyle(color: Colors.white, fontSize: 22),
+                    style: const TextStyle(
+                        color: Colors.white,
+                        fontSize: 22,
+                        fontWeight: FontWeight.w500),
+                  ),
+                  Text(
+                    'last scene',
+                    style: TextStyle(
+                        color: Colors.grey.shade100,
+                        fontSize: 15,
+                        fontWeight: FontWeight.w400),
                   ),
                 ],
               )
             ],
           ),
+        ),
+        body: Column(
+          children: [
+            Row(
+              children: [
+                IconButton(
+                    onPressed: () {},
+                    icon: const Icon(
+                      Icons.emoji_emotions,
+                      color: Colors.blueAccent,
+                    )),
+                Expanded(
+                    child: TextFormField(
+                  decoration: const InputDecoration(
+                      hintText: 'Type Somthing...',
+                      hintStyle: TextStyle(color: Colors.blueAccent),
+                      border: InputBorder.none),
+                )),
+                IconButton(
+                    onPressed: () {},
+                    icon: const Icon(
+                      Icons.image,
+                      color: Colors.blueAccent,
+                    )),
+                IconButton(
+                    onPressed: () {},
+                    icon: const Icon(
+                      Icons.camera_alt_rounded,
+                      color: Colors.blueAccent,
+                    )),
+              ],
+            )
+          ],
         ),
       ),
     );
