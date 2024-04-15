@@ -1,8 +1,10 @@
 import 'dart:developer';
 import 'dart:io';
+import 'package:chat_app/services/firestore_services.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:google_sign_in/google_sign_in.dart';
+import '../view/home_screen/home_screen.dart';
 import '../view/login_screen/widgets/otp_screen.dart';
 
 class AuthServices {
@@ -72,27 +74,27 @@ class AuthServices {
     }
   }
 
-  // handleGoogleBtnClick(context) {
-  //   signInWithGoogle().then((user) async {
-  //     if (user != null) {
-  //       print('\nUser: ${user.user}');
-  //       print('\nUserAdditionalInfo: ${user.additionalUserInfo}');
-  //       if (await FireStoreServices().userExists()) {
-  //         Navigator.pushReplacement(
-  //           context,
-  //           MaterialPageRoute(builder: (_) => const HomeScreen()),
-  //         );
-  //       } else {
-  //         FireStoreServices().createUser().then((value) {
-  //           Navigator.pushReplacement(
-  //             context,
-  //             MaterialPageRoute(builder: (_) => const HomeScreen()),
-  //           );
-  //         });
-  //       }
-  //     }
-  //   });
-  // }
+  handleGoogleBtnClick(context) {
+    signInWithGoogle().then((user) async {
+      if (user != null) {
+        print('\nUser: ${user.user}');
+        print('\nUserAdditionalInfo: ${user.additionalUserInfo}');
+        if (await FireStoreServices().userExists()) {
+          Navigator.pushReplacement(
+            context,
+            MaterialPageRoute(builder: (_) => const HomeScreen()),
+          );
+        } else {
+          FireStoreServices().createUser().then((value) {
+            Navigator.pushReplacement(
+              context,
+              MaterialPageRoute(builder: (_) => const HomeScreen()),
+            );
+          });
+        }
+      }
+    });
+  }
 
   //signOut from the app
   Future<void> signOutUserAccount() async {

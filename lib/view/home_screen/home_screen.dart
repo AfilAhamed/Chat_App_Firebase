@@ -24,6 +24,7 @@ class _HomeScreenState extends State<HomeScreen> {
 
   @override
   Widget build(BuildContext context) {
+
     final searchProvider = Provider.of<SearchUserController>(context);
     List<UserModel> list = [];
     return GestureDetector(
@@ -138,7 +139,8 @@ class _HomeScreenState extends State<HomeScreen> {
           ),
           floatingActionButton: FloatingActionButton(
             backgroundColor: Colors.blue,
-            onPressed: () {},
+            onPressed: () {
+            },
             elevation: 0,
             tooltip: 'Messages',
             splashColor: Colors.lightBlue,

@@ -22,7 +22,7 @@ class UserLoginScreen extends StatelessWidget {
               children: [
                 Text(
                   'Login',
-                  style: GoogleFonts.aDLaMDisplay(
+                  style: GoogleFonts.abel(
                       fontSize: 40, fontWeight: FontWeight.w500),
                 ),
                 const SizedBox(
@@ -81,7 +81,7 @@ class UserLoginScreen extends StatelessWidget {
                           },
                           child: Text(
                             'Sign in',
-                            style: GoogleFonts.mali(
+                            style: GoogleFonts.abel(
                                 color: Colors.white,
                                 fontSize: 18,
                                 fontWeight: FontWeight.w600),
@@ -126,7 +126,7 @@ class UserLoginScreen extends StatelessWidget {
                       borderRadius: BorderRadius.circular(100)),
                   child: IconButton(
                       onPressed: () {
-                        provider.loginWithGoogle();
+                        provider.loginWithGoogle(context);
                       },
                       icon: const Image(
                           fit: BoxFit.cover,

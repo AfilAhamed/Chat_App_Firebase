@@ -7,19 +7,7 @@ class AuthController extends ChangeNotifier {
   final TextEditingController numberController = TextEditingController();
   final TextEditingController otpController = TextEditingController();
 
-  // country picker
-  Country selectedCountry = Country(
-    phoneCode: "91",
-    countryCode: "IN",
-    e164Sc: 0,
-    geographic: true,
-    level: 1,
-    name: "India",
-    example: "India",
-    displayName: "India",
-    displayNameNoCountryCode: "IN",
-    e164Key: "",
-  );
+ 
 
   //login using phone number
   loginWithPhone(
@@ -36,14 +24,30 @@ class AuthController extends ChangeNotifier {
   }
 
   //login using google
-  Future<UserCredential?> loginWithGoogle() {
-    return AuthServices().signInWithGoogle();
+  Future<UserCredential?> loginWithGoogle(context) {
+    return AuthServices().handleGoogleBtnClick(context);
   }
 
   // signOut from the app
   Future<void> signOut() async {
     await AuthServices().signOutUserAccount();
   }
+
+
+ // country picker
+  Country selectedCountry = Country(
+    phoneCode: "91",
+    countryCode: "IN",
+    e164Sc: 0,
+    geographic: true,
+    level: 1,
+    name: "India",
+    example: "India",
+    displayName: "India",
+    displayNameNoCountryCode: "IN",
+    e164Key: "",
+  );
+
 
   //to change country
   changeCountry(value) {
