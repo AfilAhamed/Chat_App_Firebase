@@ -59,34 +59,69 @@ class _ChatScreenState extends State<ChatScreen> {
         ),
         body: Column(
           children: [
-            Row(
-              children: [
-                IconButton(
+            Padding(
+              padding: EdgeInsets.symmetric(
+                  horizontal: mq.width * .025, vertical: mq.height * .01),
+              child: Row(
+                children: [
+                  Expanded(
+                    child: Card(
+                      shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(15)),
+                      child: Row(
+                        children: [
+                          IconButton(
+                              onPressed: () {},
+                              icon: const Icon(
+                                Icons.emoji_emotions,
+                                color: Colors.blueAccent,
+                                size: 25,
+                              )),
+                          Expanded(
+                              child: TextFormField(
+                            maxLines: null,
+                            keyboardType: TextInputType.multiline,
+                            decoration: const InputDecoration(
+                                hintText: 'Type Somthing...',
+                                hintStyle: TextStyle(color: Colors.blueAccent),
+                                border: InputBorder.none),
+                          )),
+                          IconButton(
+                              onPressed: () {},
+                              icon: const Icon(
+                                Icons.image,
+                                color: Colors.blueAccent,
+                                size: 26,
+                              )),
+                          IconButton(
+                              onPressed: () {},
+                              icon: const Icon(
+                                Icons.camera_alt_rounded,
+                                color: Colors.blueAccent,
+                                size: 26,
+                              )),
+                          SizedBox(
+                            width: mq.width * .02,
+                          )
+                        ],
+                      ),
+                    ),
+                  ),
+                  MaterialButton(
                     onPressed: () {},
-                    icon: const Icon(
-                      Icons.emoji_emotions,
-                      color: Colors.blueAccent,
-                    )),
-                Expanded(
-                    child: TextFormField(
-                  decoration: const InputDecoration(
-                      hintText: 'Type Somthing...',
-                      hintStyle: TextStyle(color: Colors.blueAccent),
-                      border: InputBorder.none),
-                )),
-                IconButton(
-                    onPressed: () {},
-                    icon: const Icon(
-                      Icons.image,
-                      color: Colors.blueAccent,
-                    )),
-                IconButton(
-                    onPressed: () {},
-                    icon: const Icon(
-                      Icons.camera_alt_rounded,
-                      color: Colors.blueAccent,
-                    )),
-              ],
+                    minWidth: 0,
+                    padding: EdgeInsets.only(
+                        top: 10, bottom: 10, left: 10, right: 5),
+                    color: Colors.green,
+                    shape: const CircleBorder(),
+                    child: const Icon(
+                      Icons.send,
+                      color: Colors.white,
+                      size: 28,
+                    ),
+                  )
+                ],
+              ),
             )
           ],
         ),
