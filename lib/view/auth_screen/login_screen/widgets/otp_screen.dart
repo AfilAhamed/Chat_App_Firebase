@@ -1,5 +1,5 @@
 import 'package:chat_app/controller/auth_controller.dart';
-import 'package:chat_app/view/login_screen/login_screen.dart';
+import 'package:chat_app/view/auth_screen/login_screen/login_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:pinput/pinput.dart';
 import 'package:provider/provider.dart';

@@ -1,5 +1,6 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:chat_app/model/user_model.dart';
+import 'package:chat_app/view/chat_screen/chat_screen.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
@@ -14,7 +15,13 @@ class ChatUserCardWidget extends StatelessWidget {
       elevation: 3,
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(15)),
       child: InkWell(
-        onTap: () {},
+        onTap: () {
+          Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: (context) =>const ChatScreen(),
+              ));
+        },
         child: ListTile(
             leading: ClipRRect(
               borderRadius: BorderRadius.circular(mq.height * .3),

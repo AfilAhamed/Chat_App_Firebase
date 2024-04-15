@@ -35,6 +35,7 @@ class FireStoreServices {
     return firestore.collection('users').doc(auth!.uid).set(userModel.toJson());
   }
 
+ // get user profile information
   Future<void> getSelfInfo() async {
     await firestore.collection('users').doc(auth!.uid).get().then((user) async {
       if (user.exists) {
@@ -45,13 +46,16 @@ class FireStoreServices {
     });
   }
 
+  //get all users
   Stream<QuerySnapshot<Map<String, dynamic>>> getAllUsers() {
     return firestore
         .collection('users')
-        .where('id', isNotEqualTo: auth!.uid)
+        .where('id',)
         .snapshots();
   }
 
+
+ // update user profile info
   Future<void> updateUserInfo() async {
     return await firestore
         .collection('users')
@@ -60,7 +64,7 @@ class FireStoreServices {
   }
 
 
- // to update the profile picture
+ //  update user profile picture
   Future<void> updateProfilPicture(File file) async {
     final ext = file.path.split('.').last;
     log('profile picture extension$ext');
