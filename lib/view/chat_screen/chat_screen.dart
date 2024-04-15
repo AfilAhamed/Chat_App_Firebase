@@ -1,5 +1,6 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:chat_app/model/user_model.dart';
+import 'package:chat_app/services/firestore_services.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
@@ -18,6 +19,7 @@ class _ChatScreenState extends State<ChatScreen> {
     return SafeArea(
       child: Scaffold(
         appBar: AppBar(
+          backgroundColor: Colors.blueAccent,
           title: Row(
             children: [
               ClipRRect(
@@ -59,6 +61,36 @@ class _ChatScreenState extends State<ChatScreen> {
         ),
         body: Column(
           children: [
+            Expanded(
+              child: StreamBuilder(
+                stream: FireStoreServices().getAllUsers(),
+                builder: (context, snapshoot) {
+                  // final data = snapshoot.data?.docs;
+                  // list =
+                  //     data?.map((e) => UserModel.fromJson(e.data())).toList() ??
+                  //         [];
+                  final list = [];
+                  if (snapshoot.connectionState == ConnectionState.waiting) {
+                    return const Center(
+                      child: CircularProgressIndicator(),
+                    );
+                  } else if (list.isEmpty) {
+                    return const Center(
+                      child: Text('No Chats yet'),
+                    );
+                  } else {
+                    return ListView.builder(
+                        physics: const BouncingScrollPhysics(),
+                        padding: const EdgeInsets.only(top: 8.0),
+                        itemCount: list.length,
+                        itemBuilder: (context, index) {
+                          return Text('chat ${[list[index]]}');
+                        });
+                  }
+                },
+              ),
+            ),
+            //-------------------------------------------------------
             Padding(
               padding: EdgeInsets.symmetric(
                   horizontal: mq.width * .025, vertical: mq.height * .01),
@@ -110,7 +142,7 @@ class _ChatScreenState extends State<ChatScreen> {
                   MaterialButton(
                     onPressed: () {},
                     minWidth: 0,
-                    padding: EdgeInsets.only(
+                    padding: const EdgeInsets.only(
                         top: 10, bottom: 10, left: 10, right: 5),
                     color: Colors.green,
                     shape: const CircleBorder(),

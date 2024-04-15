@@ -6,6 +6,7 @@ import 'package:chat_app/view/profile_screen/profile_screen.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:page_transition/page_transition.dart';
 import 'package:provider/provider.dart';
 
 class HomeScreen extends StatefulWidget {
@@ -24,7 +25,6 @@ class _HomeScreenState extends State<HomeScreen> {
 
   @override
   Widget build(BuildContext context) {
-
     final searchProvider = Provider.of<SearchUserController>(context);
     List<UserModel> list = [];
     return SafeArea(
@@ -43,6 +43,7 @@ class _HomeScreenState extends State<HomeScreen> {
           },
           child: Scaffold(
             appBar: AppBar(
+              backgroundColor: Colors.blueAccent,
               systemOverlayStyle: const SystemUiOverlayStyle(
                 systemNavigationBarColor: Colors.white, // Navigation bar
               ),
@@ -82,14 +83,16 @@ class _HomeScreenState extends State<HomeScreen> {
                       style: TextStyle(
                           color: Colors.white, fontWeight: FontWeight.w600),
                     ),
-              leading: IconButton(onPressed: () {}, icon: const Icon(Icons.home)),
+              leading:
+                  IconButton(onPressed: () {}, icon: const Icon(Icons.home)),
               actions: [
                 IconButton(
                     onPressed: () {
                       searchProvider.searchList.clear();
-      
+
                       setState(() {
-                        searchProvider.isSearching = !searchProvider.isSearching;
+                        searchProvider.isSearching =
+                            !searchProvider.isSearching;
                       });
                     },
                     icon: Icon(searchProvider.isSearching
@@ -99,10 +102,10 @@ class _HomeScreenState extends State<HomeScreen> {
                     onPressed: () {
                       Navigator.push(
                           context,
-                          MaterialPageRoute(
-                              builder: (context) => ProfileScreen(
-                                    userModel: FireStoreServices.me,
-                                  )));
+                          PageTransition(
+                              child: ProfileScreen(
+                                  userModel: FireStoreServices.me),
+                              type: PageTransitionType.fade));
                     },
                     icon: const Icon(Icons.settings))
               ],
@@ -112,7 +115,8 @@ class _HomeScreenState extends State<HomeScreen> {
               builder: (context, snapshoot) {
                 final data = snapshoot.data?.docs;
                 list =
-                    data?.map((e) => UserModel.fromJson(e.data())).toList() ?? [];
+                    data?.map((e) => UserModel.fromJson(e.data())).toList() ??
+                        [];
                 if (snapshoot.connectionState == ConnectionState.waiting) {
                   return const Center(
                     child: CircularProgressIndicator(),
@@ -139,9 +143,8 @@ class _HomeScreenState extends State<HomeScreen> {
               },
             ),
             floatingActionButton: FloatingActionButton(
-              backgroundColor: Colors.blue,
-              onPressed: () {
-              },
+              backgroundColor: Colors.blueAccent,
+              onPressed: () {},
               elevation: 0,
               tooltip: 'Messages',
               splashColor: Colors.lightBlue,
