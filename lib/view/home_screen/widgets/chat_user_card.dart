@@ -3,6 +3,7 @@ import 'package:chat_app/model/user_model.dart';
 import 'package:chat_app/view/chat_screen/chat_screen.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:page_transition/page_transition.dart';
 
 class ChatUserCardWidget extends StatelessWidget {
   const ChatUserCardWidget({super.key, required this.userModel});
@@ -17,10 +18,8 @@ class ChatUserCardWidget extends StatelessWidget {
       child: InkWell(
         onTap: () {
           Navigator.push(
-              context,
-              MaterialPageRoute(
-                builder: (context) =>const ChatScreen(),
-              ));
+              context,PageTransition(child: ChatScreen(user: userModel), type: PageTransitionType.fade)
+              );
         },
         child: ListTile(
             leading: ClipRRect(
