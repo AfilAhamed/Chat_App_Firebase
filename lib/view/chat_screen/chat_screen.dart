@@ -1,6 +1,12 @@
+import 'dart:convert';
+import 'dart:developer';
+
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:chat_app/model/message_model.dart';
 import 'package:chat_app/model/user_model.dart';
+import 'package:chat_app/services/auth_services.dart';
 import 'package:chat_app/services/firestore_services.dart';
+import 'package:chat_app/view/chat_screen/widget/message_card.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
@@ -13,6 +19,7 @@ class ChatScreen extends StatefulWidget {
 }
 
 class _ChatScreenState extends State<ChatScreen> {
+  List<MessageModel> list = [];
   @override
   Widget build(BuildContext context) {
     final mq = MediaQuery.of(context).size;
@@ -63,13 +70,28 @@ class _ChatScreenState extends State<ChatScreen> {
           children: [
             Expanded(
               child: StreamBuilder(
-                stream: FireStoreServices().getAllUsers(),
+                stream: FireStoreServices().getAllMessages(),
                 builder: (context, snapshoot) {
-                  // final data = snapshoot.data?.docs;
+                  final data = snapshoot.data?.docs;
+                  log('data ${jsonEncode(data![0].data())}');
                   // list =
                   //     data?.map((e) => UserModel.fromJson(e.data())).toList() ??
                   //         [];
-                  final list = [];
+                  list.add(MessageModel(
+                      toId: 'xyz',
+                      msg: 'Hello',
+                      readTime: '',
+                      type: Type.text,
+                      fromId: FireStoreServices().auth!.uid,
+                      sendTime: '12:00 Am'));
+
+                  list.add(MessageModel(
+                      toId: FireStoreServices().auth!.uid,
+                      msg: 'Hello',
+                      readTime: '',
+                      type: Type.text,
+                      fromId: 'xyz',
+                      sendTime: '12:05 Am'));
                   if (snapshoot.connectionState == ConnectionState.waiting) {
                     return const Center(
                       child: CircularProgressIndicator(),
@@ -84,7 +106,7 @@ class _ChatScreenState extends State<ChatScreen> {
                         padding: const EdgeInsets.only(top: 8.0),
                         itemCount: list.length,
                         itemBuilder: (context, index) {
-                          return Text('chat ${[list[index]]}');
+                          return MessageCard(message: list[index]);
                         });
                   }
                 },

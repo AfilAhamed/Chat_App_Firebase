@@ -35,7 +35,7 @@ class FireStoreServices {
     return firestore.collection('users').doc(auth!.uid).set(userModel.toJson());
   }
 
- // get user profile information
+  // get user profile information
   Future<void> getSelfInfo() async {
     await firestore.collection('users').doc(auth!.uid).get().then((user) async {
       if (user.exists) {
@@ -50,12 +50,13 @@ class FireStoreServices {
   Stream<QuerySnapshot<Map<String, dynamic>>> getAllUsers() {
     return firestore
         .collection('users')
-        .where('id',)
+        .where(
+          'id',
+        )
         .snapshots();
   }
 
-
- // update user profile info
+  // update user profile info
   Future<void> updateUserInfo() async {
     return await firestore
         .collection('users')
@@ -63,8 +64,7 @@ class FireStoreServices {
         .update({'name': me.name, 'about': me.about});
   }
 
-
- //  update user profile picture
+  //  update user profile picture
   Future<void> updateProfilPicture(File file) async {
     final ext = file.path.split('.').last;
     log('profile picture extension$ext');
@@ -77,5 +77,12 @@ class FireStoreServices {
         .collection('users')
         .doc(auth!.uid)
         .update({"image": me.image});
+  }
+
+  //---------------Chat Functionality
+
+  //get all Messages
+  Stream<QuerySnapshot<Map<String, dynamic>>> getAllMessages() {
+    return firestore.collection('messages').snapshots();
   }
 }
