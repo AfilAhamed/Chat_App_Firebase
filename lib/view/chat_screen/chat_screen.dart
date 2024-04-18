@@ -1,13 +1,8 @@
-import 'dart:convert';
-import 'dart:developer';
-
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:chat_app/model/message_model.dart';
 import 'package:chat_app/model/user_model.dart';
-import 'package:chat_app/services/auth_services.dart';
 import 'package:chat_app/services/firestore_services.dart';
 import 'package:chat_app/view/chat_screen/widget/message_card.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 class ChatScreen extends StatefulWidget {
@@ -20,6 +15,8 @@ class ChatScreen extends StatefulWidget {
 
 class _ChatScreenState extends State<ChatScreen> {
   List<MessageModel> list = [];
+
+  TextEditingController messageController = TextEditingController();
   @override
   Widget build(BuildContext context) {
     final mq = MediaQuery.of(context).size;
@@ -37,7 +34,7 @@ class _ChatScreenState extends State<ChatScreen> {
                   height: mq.height * .060,
                   imageUrl: widget.user.image,
                   errorWidget: (context, url, error) => const CircleAvatar(
-                    child: Icon(CupertinoIcons.person),
+                    child: Icon(Icons.error),
                   ),
                 ),
               ),
@@ -70,37 +67,18 @@ class _ChatScreenState extends State<ChatScreen> {
           children: [
             Expanded(
               child: StreamBuilder(
-                stream: FireStoreServices().getAllMessages(),
+                stream: FireStoreServices().getAllMessages(widget.user),
                 builder: (context, snapshoot) {
-                  final data = snapshoot.data?.docs;
-                  log('data ${jsonEncode(data![0].data())}');
-                  // list =
-                  //     data?.map((e) => UserModel.fromJson(e.data())).toList() ??
-                  //         [];
-                  list.add(MessageModel(
-                      toId: 'xyz',
-                      msg: 'Hello',
-                      readTime: '',
-                      type: Type.text,
-                      fromId: FireStoreServices().auth!.uid,
-                      sendTime: '12:00 Am'));
+                  final data = snapshoot.data!.docs;
+                  // log('data ${jsonEncode(data[0].data())}');
+                  list =
+                      data.map((e) => MessageModel.fromJson(e.data())).toList();
 
-                  list.add(MessageModel(
-                      toId: FireStoreServices().auth!.uid,
-                      msg: 'Hello',
-                      readTime: '',
-                      type: Type.text,
-                      fromId: 'xyz',
-                      sendTime: '12:05 Am'));
                   if (snapshoot.connectionState == ConnectionState.waiting) {
                     return const Center(
                       child: CircularProgressIndicator(),
                     );
-                  } else if (list.isEmpty) {
-                    return const Center(
-                      child: Text('No Chats yet'),
-                    );
-                  } else {
+                  } else if (list.isNotEmpty) {
                     return ListView.builder(
                         physics: const BouncingScrollPhysics(),
                         padding: const EdgeInsets.only(top: 8.0),
@@ -108,6 +86,10 @@ class _ChatScreenState extends State<ChatScreen> {
                         itemBuilder: (context, index) {
                           return MessageCard(message: list[index]);
                         });
+                  } else {
+                    return const Center(
+                      child: Text('No Chats yet'),
+                    );
                   }
                 },
               ),
@@ -133,6 +115,7 @@ class _ChatScreenState extends State<ChatScreen> {
                               )),
                           Expanded(
                               child: TextFormField(
+                            controller: messageController,
                             maxLines: null,
                             keyboardType: TextInputType.multiline,
                             decoration: const InputDecoration(
@@ -162,7 +145,13 @@ class _ChatScreenState extends State<ChatScreen> {
                     ),
                   ),
                   MaterialButton(
-                    onPressed: () {},
+                    onPressed: () {
+                      if (messageController.text.isNotEmpty) {
+                        FireStoreServices()
+                            .sendMessages(widget.user, messageController.text);
+                        messageController.text = '';
+                      }
+                    },
                     minWidth: 0,
                     padding: const EdgeInsets.only(
                         top: 10, bottom: 10, left: 10, right: 5),
