@@ -1,6 +1,8 @@
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:chat_app/helpers/date_util.dart';
 import 'package:chat_app/model/message_model.dart';
 import 'package:chat_app/model/user_model.dart';
+import 'package:chat_app/services/auth_services.dart';
 import 'package:chat_app/services/firestore_services.dart';
 import 'package:chat_app/view/chat_screen/chat_screen.dart';
 import 'package:flutter/cupertino.dart';
@@ -40,33 +42,38 @@ class ChatUserCardWidget extends StatelessWidget {
               }
 
               return ListTile(
-                  leading: ClipRRect(
-                    borderRadius: BorderRadius.circular(mq.height * .3),
-                    child: CachedNetworkImage(
-                      fit: BoxFit.fill,
-                      width: mq.height * .055,
-                      height: mq.height * .055,
-                      imageUrl: userModel.image,
-                      errorWidget: (context, url, error) => const CircleAvatar(
-                        child: Icon(CupertinoIcons.person),
-                      ),
+                leading: ClipRRect(
+                  borderRadius: BorderRadius.circular(mq.height * .3),
+                  child: CachedNetworkImage(
+                    fit: BoxFit.fill,
+                    width: mq.height * .055,
+                    height: mq.height * .055,
+                    imageUrl: userModel.image,
+                    errorWidget: (context, url, error) => const CircleAvatar(
+                      child: Icon(CupertinoIcons.person),
                     ),
                   ),
-                  title: Text(userModel.name),
-                  subtitle: Text(message!.msg),
-                  trailing: Container(
-                    height: 15,
-                    width: 15,
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(10),
-                      color: Colors.blue.shade400,
-                    ),
-                  )
-                  //  trailing: const Text(
-                  //   '12.00 Pm',
-                  //   style: TextStyle(color: Colors.grey),
-                  // ),
-                  );
+                ),
+                title: Text(userModel.name),
+                subtitle: Text(message!.msg),
+                trailing: message == null
+                    ? null
+                    : message!.readTime.isEmpty &&
+                            message!.fromId != FireStoreServices().auth!.uid
+                        ? Container(
+                            height: 15,
+                            width: 15,
+                            decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(10),
+                              color: Colors.green.shade400,
+                            ),
+                          )
+                        : Text(
+                            DateUtil().getLastMessageTime(
+                                context: context, time: message!.sendTime),
+                            style: const TextStyle(color: Colors.black54),
+                          ),
+              );
             },
           )),
     );
