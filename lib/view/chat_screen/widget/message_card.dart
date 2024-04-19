@@ -1,3 +1,4 @@
+import 'package:chat_app/helpers/date_util.dart';
 import 'package:chat_app/model/message_model.dart';
 import 'package:chat_app/services/firestore_services.dart';
 import 'package:flutter/material.dart';
@@ -10,12 +11,16 @@ class MessageCard extends StatelessWidget {
   Widget build(BuildContext context) {
     final mq = MediaQuery.of(context).size;
     return FireStoreServices().auth!.uid == message.fromId
-        ? _greenMessage(mq)
-        : _blueMessage(mq);
+        ? _greenMessage(mq, context)
+        : _blueMessage(mq, context);
   }
 
   // sender message
-  Widget _blueMessage(Size mediaquery) {
+  Widget _blueMessage(Size mediaquery, BuildContext context) {
+    if (message.readTime.isEmpty) {
+      FireStoreServices().updateReadMessageStatus(message);
+    }
+
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
@@ -41,7 +46,8 @@ class MessageCard extends StatelessWidget {
         Padding(
           padding: EdgeInsets.only(right: mediaquery.width * .04),
           child: Text(
-            message.sendTime,
+            DateUtil()
+                .getFormatedDate(context: context, time: message.sendTime),
             style: const TextStyle(fontSize: 12, color: Colors.black54),
           ),
         )
@@ -50,7 +56,7 @@ class MessageCard extends StatelessWidget {
   }
 
   // our user message
-  Widget _greenMessage(Size mediaquery) {
+  Widget _greenMessage(Size mediaquery, BuildContext context) {
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
@@ -59,16 +65,18 @@ class MessageCard extends StatelessWidget {
             SizedBox(
               width: mediaquery.width * .04,
             ),
-            const Icon(
-              Icons.done_all_rounded,
-              color: Colors.blue,
-              size: 20,
-            ),
+            if (message.readTime.isNotEmpty)
+              const Icon(
+                Icons.done_all_rounded,
+                color: Colors.blue,
+                size: 20,
+              ),
             const SizedBox(
               width: 2,
             ),
             Text(
-              "${message.readTime}12:00 AM",
+              DateUtil()
+                  .getFormatedDate(context: context, time: message.sendTime),
               style: const TextStyle(fontSize: 12, color: Colors.black54),
             ),
           ],

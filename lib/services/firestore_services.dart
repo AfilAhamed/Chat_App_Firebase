@@ -1,6 +1,5 @@
 import 'dart:developer';
 import 'dart:io';
-
 import 'package:chat_app/model/message_model.dart';
 import 'package:chat_app/model/user_model.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -51,9 +50,7 @@ class FireStoreServices {
   Stream<QuerySnapshot<Map<String, dynamic>>> getAllUsers() {
     return firestore
         .collection('users')
-        .where(
-          'id',
-        )
+        .where('id', isNotEqualTo: auth!.uid)
         .snapshots();
   }
 
@@ -110,5 +107,23 @@ class FireStoreServices {
     final ref =
         firestore.collection('chats/${getConversationId(user.id)}/messages');
     await ref.doc(time).set(message.toJson());
+  }
+
+  // read message status
+
+  Future<void> updateReadMessageStatus(MessageModel message) async {
+    await firestore
+        .collection('chats/${getConversationId(message.fromId)}/messages')
+        .doc(message.sendTime)
+        .update({'readTime': DateTime.now().millisecondsSinceEpoch.toString()});
+  }
+
+  //get only last message of a chat
+  Stream<QuerySnapshot<Map<String, dynamic>>> getLastMessage(UserModel user) {
+    return firestore
+        .collection('chats/${getConversationId(user.id)}/messages')
+        .orderBy('sendTime', descending: true)
+        .limit(1)
+        .snapshots();
   }
 }
