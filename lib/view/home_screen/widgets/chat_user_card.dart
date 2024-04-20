@@ -55,7 +55,14 @@ class ChatUserCardWidget extends StatelessWidget {
                   ),
                 ),
                 title: Text(userModel.name),
-                subtitle: Text(message!.msg),
+                subtitle: Text(
+                  message != null
+                      ? message!.type == Type.image
+                          ? 'image'
+                          : message!.msg
+                      : userModel.about,
+                  maxLines: 1,
+                ),
                 trailing: message == null
                     ? null
                     : message!.readTime.isEmpty &&

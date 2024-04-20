@@ -89,18 +89,19 @@ class FireStoreServices {
   Stream<QuerySnapshot<Map<String, dynamic>>> getAllMessages(UserModel user) {
     return firestore
         .collection('chats/${getConversationId(user.id)}/messages')
+        .orderBy('sendTime', descending: true)
         .snapshots();
   }
 
   // send messages
-  Future<void> sendMessages(UserModel user, String msg) async {
+  Future<void> sendMessages(UserModel user, String msg, Type type) async {
     final time = DateTime.now().millisecondsSinceEpoch.toString();
 
     final MessageModel message = MessageModel(
         toId: user.id,
         msg: msg,
         readTime: '',
-        type: Type.text,
+        type: type,
         fromId: auth!.uid,
         sendTime: time);
 
@@ -110,7 +111,6 @@ class FireStoreServices {
   }
 
   // read message status
-
   Future<void> updateReadMessageStatus(MessageModel message) async {
     await firestore
         .collection('chats/${getConversationId(message.fromId)}/messages')
@@ -125,5 +125,17 @@ class FireStoreServices {
         .orderBy('sendTime', descending: true)
         .limit(1)
         .snapshots();
+  }
+
+ // send images in chat
+  Future<void> sendChatImage(UserModel chatUser, File file) async {
+    final ext = file.path.split('.').last;
+    final ref = storage.ref().child(
+        'images/${getConversationId(chatUser.id)}/${DateTime.now().millisecondsSinceEpoch}.$ext');
+    await ref
+        .putFile(file, SettableMetadata(contentType: 'image/$ext'))
+        .then((p0) => log('Data Transfered: ${p0.bytesTransferred / 1000} kb'));
+    final imageUrl = await ref.getDownloadURL();
+    await sendMessages(chatUser, imageUrl, Type.image);
   }
 }

@@ -1,3 +1,4 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:chat_app/helpers/date_util.dart';
 import 'package:chat_app/model/message_model.dart';
 import 'package:chat_app/services/firestore_services.dart';
@@ -36,11 +37,31 @@ class MessageCard extends StatelessWidget {
             margin: EdgeInsets.symmetric(
                 horizontal: mediaquery.width * .04,
                 vertical: mediaquery.height * .01),
-            padding: EdgeInsets.all(mediaquery.width * .04),
-            child: Text(
-              message.msg,
-              style: const TextStyle(fontSize: 15, color: Colors.black87),
-            ),
+            padding: EdgeInsets.all(message.type == Type.text
+                ? mediaquery.width * .04
+                : mediaquery.width * .03),
+            child: message.type == Type.text
+                ? Text(
+                    message.msg,
+                    style: const TextStyle(fontSize: 15, color: Colors.black87),
+                  )
+                : ClipRRect(
+                    borderRadius: BorderRadius.circular(15),
+                    child: CachedNetworkImage(
+                      placeholder: (context, url) => const Padding(
+                        padding: EdgeInsets.all(8.0),
+                        child: CircularProgressIndicator(strokeWidth: 2),
+                      ),
+                      fit: BoxFit.cover,
+                      imageUrl: message.msg,
+                      errorWidget: (context, url, error) => const CircleAvatar(
+                        child: Icon(
+                          Icons.image,
+                          size: 70,
+                        ),
+                      ),
+                    ),
+                  ),
           ),
         ),
         Padding(
@@ -93,11 +114,31 @@ class MessageCard extends StatelessWidget {
             margin: EdgeInsets.symmetric(
                 horizontal: mediaquery.width * .04,
                 vertical: mediaquery.height * .01),
-            padding: EdgeInsets.all(mediaquery.width * .04),
-            child: Text(
-              message.msg,
-              style: const TextStyle(fontSize: 15, color: Colors.black87),
-            ),
+            padding: EdgeInsets.all(message.type == Type.text
+                ? mediaquery.width * .04
+                : mediaquery.width * .03),
+            child: message.type == Type.text
+                ? Text(
+                    message.msg,
+                    style: const TextStyle(fontSize: 15, color: Colors.black87),
+                  )
+                : ClipRRect(
+                    borderRadius: BorderRadius.circular(15),
+                    child: CachedNetworkImage(
+                      placeholder: (context, url) => const Padding(
+                        padding: EdgeInsets.all(8.0),
+                        child: CircularProgressIndicator(strokeWidth: 2),
+                      ),
+                      fit: BoxFit.cover,
+                      imageUrl: message.msg,
+                      errorWidget: (context, url, error) => const CircleAvatar(
+                        child: Icon(
+                          Icons.image,
+                          size: 70,
+                        ),
+                      ),
+                    ),
+                  ),
           ),
         ),
       ],
