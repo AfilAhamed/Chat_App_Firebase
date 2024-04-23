@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:chat_app/controller/search_controller.dart';
 import 'package:chat_app/model/user_model.dart';
 import 'package:chat_app/services/firestore_services.dart';
@@ -21,6 +23,20 @@ class _HomeScreenState extends State<HomeScreen> {
   void initState() {
     super.initState();
     FireStoreServices().getSelfInfo();
+    FireStoreServices().updateActiveStatus(true);
+    SystemChannels.lifecycle.setMessageHandler((message) {
+      log(' messssage $message');
+
+      if (FireStoreServices().auth != null) {
+        if (message.toString().contains('resume')) {
+          FireStoreServices().updateActiveStatus(true);
+        }
+        if (message.toString().contains('pause')) {
+          FireStoreServices().updateActiveStatus(false);
+        }
+      }
+      return Future.value(message);
+    });
   }
 
   @override

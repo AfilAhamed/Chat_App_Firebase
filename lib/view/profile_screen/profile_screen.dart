@@ -4,6 +4,7 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:chat_app/helpers/dailogs.dart';
 import 'package:chat_app/model/user_model.dart';
 import 'package:chat_app/services/firestore_services.dart';
+import 'package:chat_app/view/auth_screen/login_screen/login_screen.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
@@ -37,7 +38,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
             backgroundColor: Colors.blueAccent,
             title: const Text(
               'Profile',
-              style: TextStyle(color: Colors.white, fontWeight: FontWeight.w600),
+              style:
+                  TextStyle(color: Colors.white, fontWeight: FontWeight.w600),
             ),
           ),
           body: Form(
@@ -116,7 +118,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                                   style: ElevatedButton.styleFrom(
                                                       backgroundColor:
                                                           Colors.white,
-                                                      shape: const CircleBorder(),
+                                                      shape:
+                                                          const CircleBorder(),
                                                       fixedSize: Size(
                                                           mq.width * .3,
                                                           mq.height * .15)),
@@ -125,18 +128,19 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                                         ImagePicker();
                                                     final XFile? image =
                                                         await picker.pickImage(
-                                                            source: ImageSource
-                                                                .gallery,);
+                                                      source:
+                                                          ImageSource.gallery,
+                                                    );
                                                     if (image != null) {
                                                       log(image.path);
                                                       setState(() {
                                                         imagePath = image.path;
                                                       });
-                                                       FireStoreServices()
-                                                        .updateProfilPicture(File(imagePath!));
+                                                      FireStoreServices()
+                                                          .updateProfilPicture(
+                                                              File(imagePath!));
                                                       Navigator.pop(context);
                                                     }
-                                                   
                                                   },
                                                   child: Image.asset(
                                                       'assets/add_image.png')),
@@ -144,7 +148,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                                   style: ElevatedButton.styleFrom(
                                                       backgroundColor:
                                                           Colors.white,
-                                                      shape: const CircleBorder(),
+                                                      shape:
+                                                          const CircleBorder(),
                                                       fixedSize: Size(
                                                           mq.width * .3,
                                                           mq.height * .15)),
@@ -162,8 +167,9 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                                       });
                                                       Navigator.pop(context);
                                                     }
-                                                      FireStoreServices()
-                                                        .updateProfilPicture(File(imagePath!));
+                                                    FireStoreServices()
+                                                        .updateProfilPicture(
+                                                            File(imagePath!));
                                                   },
                                                   child: Image.asset(
                                                       'assets/camera.png')),
@@ -185,7 +191,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
                     ),
                     Text(
                       widget.userModel.email,
-                      style: const TextStyle(color: Colors.black54, fontSize: 16),
+                      style:
+                          const TextStyle(color: Colors.black54, fontSize: 16),
                     ),
                     SizedBox(
                       height: mq.height * .03,
@@ -205,8 +212,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
                           prefixIcon:
                               const Icon(Icons.person, color: Colors.blue),
                           focusedBorder: OutlineInputBorder(
-                              borderSide:
-                                  const BorderSide(color: Colors.blue, width: 2),
+                              borderSide: const BorderSide(
+                                  color: Colors.blue, width: 2),
                               borderRadius: BorderRadius.circular(14)),
                           border: OutlineInputBorder(
                               borderRadius: BorderRadius.circular(14))),
@@ -231,8 +238,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
                             color: Colors.blue,
                           ),
                           focusedBorder: OutlineInputBorder(
-                              borderSide:
-                                  const BorderSide(color: Colors.blue, width: 2),
+                              borderSide: const BorderSide(
+                                  color: Colors.blue, width: 2),
                               borderRadius: BorderRadius.circular(14)),
                           border: OutlineInputBorder(
                               borderRadius: BorderRadius.circular(14))),
@@ -271,8 +278,15 @@ class _ProfileScreenState extends State<ProfileScreen> {
           floatingActionButton: FloatingActionButton.extended(
             shape: const StadiumBorder(),
             backgroundColor: Colors.blueAccent,
-            onPressed: () {
-              provider.signOut();
+            onPressed: () async {
+              await FireStoreServices().updateActiveStatus(false);
+              await provider
+                  .signOut()
+                  .then((value) => Navigator.pushReplacement(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => UserLoginScreen(),
+                      )));
             },
             elevation: 0,
             tooltip: 'Log Out',
@@ -285,7 +299,9 @@ class _ProfileScreenState extends State<ProfileScreen> {
             label: const Text(
               'Log Out',
               style: TextStyle(
-                  color: Colors.white, fontWeight: FontWeight.bold, fontSize: 17),
+                  color: Colors.white,
+                  fontWeight: FontWeight.bold,
+                  fontSize: 17),
             ),
           ),
         ),

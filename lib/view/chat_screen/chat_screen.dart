@@ -1,10 +1,12 @@
 import 'dart:developer';
 import 'dart:io';
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:chat_app/helpers/date_util.dart';
 import 'package:chat_app/model/message_model.dart';
 import 'package:chat_app/model/user_model.dart';
 import 'package:chat_app/services/firestore_services.dart';
 import 'package:chat_app/view/chat_screen/widget/message_card.dart';
+import 'package:chat_app/view/chat_screen/widget/view_user_profile.dart';
 import 'package:emoji_picker_flutter/emoji_picker_flutter.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
@@ -42,46 +44,78 @@ class _ChatScreenState extends State<ChatScreen> {
           child: Scaffold(
             backgroundColor: const Color.fromARGB(255, 234, 248, 255),
             appBar: AppBar(
-              backgroundColor: Colors.blueAccent,
-              title: Row(
-                children: [
-                  ClipRRect(
-                    borderRadius: BorderRadius.circular(mq.height * .3),
-                    child: CachedNetworkImage(
-                      fit: BoxFit.fill,
-                      width: mq.height * .060,
-                      height: mq.height * .060,
-                      imageUrl: widget.user.image,
-                      errorWidget: (context, url, error) => const CircleAvatar(
-                        child: Icon(Icons.error),
-                      ),
-                    ),
+                backgroundColor: Colors.blueAccent,
+                title: InkWell(
+                  onTap: () {
+                    Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) =>
+                              ViewUserProfile(userModel: widget.user),
+                        ));
+                  },
+                  child: StreamBuilder(
+                    stream: FireStoreServices().getUserInfo(widget.user),
+                    builder: (context, snapshot) {
+                      final data = snapshot.data?.docs;
+                      final list = data
+                              ?.map((e) => UserModel.fromJson(e.data()))
+                              .toList() ??
+                          [];
+                      return Row(
+                        children: [
+                          ClipRRect(
+                            borderRadius: BorderRadius.circular(mq.height * .3),
+                            child: CachedNetworkImage(
+                              fit: BoxFit.fill,
+                              width: mq.height * .060,
+                              height: mq.height * .060,
+                              imageUrl: list.isNotEmpty
+                                  ? list[0].image
+                                  : widget.user.image,
+                              errorWidget: (context, url, error) =>
+                                  const CircleAvatar(
+                                child: Icon(Icons.error),
+                              ),
+                            ),
+                          ),
+                          SizedBox(
+                            width: mq.width * 0.04,
+                          ),
+                          Column(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              Text(
+                                list.isNotEmpty
+                                    ? list[0].name
+                                    : widget.user.name,
+                                style: const TextStyle(
+                                    color: Colors.white,
+                                    fontSize: 22,
+                                    fontWeight: FontWeight.w500),
+                              ),
+                              Text(
+                                list.isNotEmpty
+                                    ? list[0].isOnline
+                                        ? 'Online'
+                                        : DateUtil().getLastActiveTime(
+                                            context: context,
+                                            lastActive: list[0].lastActive)
+                                    : DateUtil().getLastActiveTime(
+                                        context: context,
+                                        lastActive: widget.user.lastActive),
+                                style: TextStyle(
+                                    color: Colors.grey.shade100,
+                                    fontSize: 15,
+                                    fontWeight: FontWeight.w400),
+                              ),
+                            ],
+                          )
+                        ],
+                      );
+                    },
                   ),
-                  SizedBox(
-                    width: mq.width * 0.04,
-                  ),
-                  Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Text(
-                        widget.user.name,
-                        style: const TextStyle(
-                            color: Colors.white,
-                            fontSize: 22,
-                            fontWeight: FontWeight.w500),
-                      ),
-                      Text(
-                        'last scene',
-                        style: TextStyle(
-                            color: Colors.grey.shade100,
-                            fontSize: 15,
-                            fontWeight: FontWeight.w400),
-                      ),
-                    ],
-                  )
-                ],
-              ),
-            ),
+                )),
             body: Column(
               children: [
                 Expanded(

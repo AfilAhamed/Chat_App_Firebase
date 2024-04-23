@@ -5,6 +5,7 @@ import 'package:chat_app/model/user_model.dart';
 import 'package:chat_app/services/auth_services.dart';
 import 'package:chat_app/services/firestore_services.dart';
 import 'package:chat_app/view/chat_screen/chat_screen.dart';
+import 'package:chat_app/view/widgets/profile_dailog.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:page_transition/page_transition.dart';
@@ -42,15 +43,21 @@ class ChatUserCardWidget extends StatelessWidget {
               }
 
               return ListTile(
-                leading: ClipRRect(
-                  borderRadius: BorderRadius.circular(mq.height * .3),
-                  child: CachedNetworkImage(
-                    fit: BoxFit.fill,
-                    width: mq.height * .055,
-                    height: mq.height * .055,
-                    imageUrl: userModel.image,
-                    errorWidget: (context, url, error) => const CircleAvatar(
-                      child: Icon(CupertinoIcons.person),
+                leading: InkWell(
+                  onTap: () => showDialog(
+                    context: context,
+                    builder: (context) => ProfileDailog(user: userModel),
+                  ),
+                  child: ClipRRect(
+                    borderRadius: BorderRadius.circular(mq.height * .3),
+                    child: CachedNetworkImage(
+                      fit: BoxFit.fill,
+                      width: mq.height * .060,
+                      height: mq.height * .060,
+                      imageUrl: userModel.image,
+                      errorWidget: (context, url, error) => const CircleAvatar(
+                        child: Icon(CupertinoIcons.person),
+                      ),
                     ),
                   ),
                 ),

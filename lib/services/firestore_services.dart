@@ -77,10 +77,23 @@ class FireStoreServices {
         .update({"image": me.image});
   }
 
-  //---------------Chat Functionality
+  Stream<QuerySnapshot<Map<String, dynamic>>> getUserInfo(UserModel chatUser) {
+    return firestore
+        .collection('users')
+        .where('id', isEqualTo: chatUser.id)
+        .snapshots();
+  }
+
+  Future<void> updateActiveStatus(bool isOnline) async {
+    firestore.collection('users').doc(auth!.uid).update({
+      'is_online': isOnline,
+      'last_active': DateTime.now().millisecondsSinceEpoch.toString()
+    });
+  }
+
+  //-------------------Chat Functionality------------------------//
 
   //conversation id
-
   String getConversationId(String id) => auth!.uid.hashCode <= id.hashCode
       ? '${auth!.uid}_$id'
       : '${id}_${auth!.uid}';
@@ -127,7 +140,7 @@ class FireStoreServices {
         .snapshots();
   }
 
- // send images in chat
+  // send images in chat
   Future<void> sendChatImage(UserModel chatUser, File file) async {
     final ext = file.path.split('.').last;
     final ref = storage.ref().child(
