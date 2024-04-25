@@ -1,8 +1,10 @@
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:chat_app/helpers/dailogs.dart';
 import 'package:chat_app/helpers/date_util.dart';
 import 'package:chat_app/model/message_model.dart';
 import 'package:chat_app/services/firestore_services.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 
 class MessageCard extends StatelessWidget {
   const MessageCard({super.key, required this.message});
@@ -40,7 +42,14 @@ class MessageCard extends StatelessWidget {
                               size: 26,
                             ),
                             name: 'Copy Text',
-                            onTap: () {})
+                            onTap: () async {
+                              await Clipboard.setData(
+                                      ClipboardData(text: message.msg))
+                                  .then((value) {
+                                Navigator.pop(context);
+                                Dailogas().showSnackBar(context, 'Text Copied');
+                              });
+                            })
                         : OptionItem(
                             icon: const Icon(
                               Icons.download,
@@ -63,7 +72,62 @@ class MessageCard extends StatelessWidget {
                             size: 26,
                           ),
                           name: 'Edit Message',
-                          onTap: () {}),
+                          onTap: () {
+                            Navigator.pop(context);
+                            String updateMessage = message.msg;
+                            showDialog(
+                              context: context,
+                              builder: (context) => AlertDialog(
+                                contentPadding: EdgeInsets.only(
+                                    left: 24, right: 24, top: 20, bottom: 10),
+                                shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(20)),
+                                title: const Row(
+                                  children: [
+                                    Icon(
+                                      Icons.message,
+                                      color: Colors.blue,
+                                      size: 28,
+                                    ),
+                                    Text('Update Message'),
+                                  ],
+                                ),
+                                content: TextFormField(
+                                  maxLines: null,
+                                  onChanged: (value) => updateMessage = value,
+                                  initialValue: updateMessage,
+                                  decoration: InputDecoration(
+                                      border: OutlineInputBorder(
+                                          borderRadius:
+                                              BorderRadius.circular(15))),
+                                ),
+                                actions: [
+                                  MaterialButton(
+                                    onPressed: () {
+                                      Navigator.pop(context);
+                                    },
+                                    child: const Text(
+                                      "Cancel",
+                                      style: TextStyle(
+                                          color: Colors.blue, fontSize: 16),
+                                    ),
+                                  ),
+                                  MaterialButton(
+                                    onPressed: () {
+                                      Navigator.pop(context);
+                                      FireStoreServices().updateMessage(
+                                          message, updateMessage);
+                                    },
+                                    child: const Text(
+                                      "Update",
+                                      style: TextStyle(
+                                          color: Colors.blue, fontSize: 16),
+                                    ),
+                                  )
+                                ],
+                              ),
+                            );
+                          }),
                     if (FireStoreServices().auth!.uid == message.fromId)
                       OptionItem(
                           icon: const Icon(
@@ -72,7 +136,15 @@ class MessageCard extends StatelessWidget {
                             size: 26,
                           ),
                           name: 'Delete Message',
-                          onTap: () {}),
+                          onTap: () async {
+                            await FireStoreServices()
+                                .deleteMessage(message)
+                                .then((value) {
+                              Navigator.pop(context);
+                              Dailogas()
+                                  .showSnackBar(context, 'Message Deleted');
+                            });
+                          }),
                     if (FireStoreServices().auth!.uid == message.fromId)
                       Divider(
                         color: Colors.grey,

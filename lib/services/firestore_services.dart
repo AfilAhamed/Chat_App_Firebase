@@ -161,6 +161,26 @@ class FireStoreServices {
     await sendMessages(chatUser, imageUrl, Type.image);
   }
 
+  // delete chat messages
+  Future<void> deleteMessage(MessageModel message) async {
+    await firestore
+        .collection('chats/${getConversationId(message.toId)}/messages')
+        .doc(message.sendTime)
+        .delete();
+    if (message.type == Type.image) {
+      await storage.refFromURL(message.msg).delete();
+    }
+  }
+
+  // update chat messages
+  Future<void> updateMessage(
+      MessageModel message, String updatedMessage) async {
+    await firestore
+        .collection('chats/${getConversationId(message.toId)}/messages')
+        .doc(message.sendTime)
+        .update({'msg': updatedMessage});
+  }
+
   //-------------------Fcm Notification Functionality------------------------//
 
   // get Firebase Token
@@ -175,16 +195,14 @@ class FireStoreServices {
 
     // for foreground notififcations--
 
-  //   FirebaseMessaging.onMessage.listen((RemoteMessage message) {
-  //   log('Got a message whilst in the foreground!');
-  //   log('Message data: ${message.data}');
+    //   FirebaseMessaging.onMessage.listen((RemoteMessage message) {
+    //   log('Got a message whilst in the foreground!');
+    //   log('Message data: ${message.data}');
 
-  //   if (message.notification != null) {
-  //     log('Message also contained a notification: ${message.notification}');
-  //   }
- // });
-
- 
+    //   if (message.notification != null) {
+    //     log('Message also contained a notification: ${message.notification}');
+    //   }
+    // });
   }
 
   // push notification message
