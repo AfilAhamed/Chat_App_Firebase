@@ -80,4 +80,19 @@ class DateUtil {
     String month = getMonth(time);
     return 'Last seen on ${time.day} $month on $formattedTime';
   }
+
+  getMessageTime({required BuildContext context, required String time}) {
+    final DateTime sent = DateTime.fromMillisecondsSinceEpoch(int.parse(time));
+    final DateTime now = DateTime.now();
+
+    final formattedTime = TimeOfDay.fromDateTime(sent).format(context);
+    if (now.day == sent.day &&
+        now.month == sent.month &&
+        now.year == sent.year) {
+      return formattedTime;
+    }
+    return now.year == sent.year
+        ? '$formattedTime - ${sent.day} ${getMonth(sent)}'
+        : '$formattedTime - ${sent.day} ${getMonth(sent)} ${sent.year}';
+  }
 }

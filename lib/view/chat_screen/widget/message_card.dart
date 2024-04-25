@@ -84,14 +84,17 @@ class MessageCard extends StatelessWidget {
                           Icons.remove_red_eye,
                           color: Colors.blue,
                         ),
-                        name: 'Sent At',
+                        name:
+                            'Sent At: ${DateUtil().getMessageTime(context: context, time: message.sendTime)}',
                         onTap: () {}),
                     OptionItem(
                         icon: const Icon(
                           Icons.remove_red_eye,
                           color: Colors.green,
                         ),
-                        name: 'Read At',
+                        name: message.readTime.isEmpty
+                            ? "Read At: Not seen yet"
+                            : 'Read At: ${DateUtil().getMessageTime(context: context, time: message.readTime)}',
                         onTap: () {})
                   ],
                 );
