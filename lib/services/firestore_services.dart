@@ -1,16 +1,21 @@
+import 'dart:convert';
 import 'dart:developer';
 import 'dart:io';
 import 'package:chat_app/model/message_model.dart';
 import 'package:chat_app/model/user_model.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:firebase_storage/firebase_storage.dart';
+import 'package:http/http.dart' as http;
 
 class FireStoreServices {
   final FirebaseFirestore firestore = FirebaseFirestore.instance;
   final FirebaseStorage storage = FirebaseStorage.instance;
+  FirebaseMessaging fMessaging = FirebaseMessaging.instance;
 
   final auth = FirebaseAuth.instance.currentUser;
+
   static late UserModel me;
 
   // to check weather a user exists or not
@@ -40,6 +45,8 @@ class FireStoreServices {
     await firestore.collection('users').doc(auth!.uid).get().then((user) async {
       if (user.exists) {
         me = UserModel.fromJson(user.data()!);
+        await getFirebseMessagingToken();
+        updateActiveStatus(true);
       } else {
         await createUser().then((value) => getSelfInfo());
       }
@@ -87,7 +94,8 @@ class FireStoreServices {
   Future<void> updateActiveStatus(bool isOnline) async {
     firestore.collection('users').doc(auth!.uid).update({
       'is_online': isOnline,
-      'last_active': DateTime.now().millisecondsSinceEpoch.toString()
+      'last_active': DateTime.now().millisecondsSinceEpoch.toString(),
+      'push_token': me.pushToken
     });
   }
 
@@ -120,7 +128,8 @@ class FireStoreServices {
 
     final ref =
         firestore.collection('chats/${getConversationId(user.id)}/messages');
-    await ref.doc(time).set(message.toJson());
+    await ref.doc(time).set(message.toJson()).then((value) =>
+        sendPushNotification(user, type == Type.text ? msg : 'image'));
   }
 
   // read message status
@@ -150,5 +159,61 @@ class FireStoreServices {
         .then((p0) => log('Data Transfered: ${p0.bytesTransferred / 1000} kb'));
     final imageUrl = await ref.getDownloadURL();
     await sendMessages(chatUser, imageUrl, Type.image);
+  }
+
+  //-------------------Fcm Notification Functionality------------------------//
+
+  // get Firebase Token
+  Future<void> getFirebseMessagingToken() async {
+    await fMessaging.requestPermission();
+    await fMessaging.getToken().then((value) {
+      if (value != null) {
+        me.pushToken = value;
+        log(value);
+      }
+    });
+
+    // for foreground notififcations--
+
+  //   FirebaseMessaging.onMessage.listen((RemoteMessage message) {
+  //   log('Got a message whilst in the foreground!');
+  //   log('Message data: ${message.data}');
+
+  //   if (message.notification != null) {
+  //     log('Message also contained a notification: ${message.notification}');
+  //   }
+ // });
+
+ 
+  }
+
+  // push notification message
+  Future<void> sendPushNotification(UserModel user, String message) async {
+    final data = {
+      "to": user.pushToken,
+      "notification": {
+        "title": user.name,
+        "body": message,
+        // "android_channel_id": "chats",
+      },
+      // "data": {
+      //   "some_data": "User D ${me.id}",
+      // }
+    };
+    const url = 'https://fcm.googleapis.com/fcm/send';
+    try {
+      final response =
+          await http.post(Uri.parse(url), body: jsonEncode(data), headers: {
+        HttpHeaders.authorizationHeader:
+            "key=cxzgT9cYTdeCCMoSTvRfRg:APA91bGiKZ0yQ6p33aJccWTuPVzDiSMyYK_yGWYjvZg3eyQM1uMdZ5wWQ8T6QTYGx8CVXAtoxWxD8p9H6yhhzhsrcmASNzQDgCcQwhvC8kh3UzuXAkY1V8PxibTcW5wht2h4Dors9X0h"
+      });
+      if (response.statusCode == 201) {
+        log('Notification Sended Succesfully');
+      } else {
+        log('Failed to send Notification');
+      }
+    } catch (e) {
+      log(e.toString());
+    }
   }
 }

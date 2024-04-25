@@ -23,7 +23,6 @@ class _HomeScreenState extends State<HomeScreen> {
   void initState() {
     super.initState();
     FireStoreServices().getSelfInfo();
-    FireStoreServices().updateActiveStatus(true);
     SystemChannels.lifecycle.setMessageHandler((message) {
       log(' messssage $message');
 

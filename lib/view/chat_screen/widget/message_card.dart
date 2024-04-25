@@ -11,9 +11,82 @@ class MessageCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final mq = MediaQuery.of(context).size;
-    return FireStoreServices().auth!.uid == message.fromId
-        ? _greenMessage(mq, context)
-        : _blueMessage(mq, context);
+    return InkWell(
+        onLongPress: () {
+          showModalBottomSheet(
+              shape: const RoundedRectangleBorder(
+                  borderRadius: BorderRadius.only(
+                      topLeft: Radius.circular(20),
+                      topRight: Radius.circular(20))),
+              context: context,
+              builder: (builder) {
+                return ListView(
+                  shrinkWrap: true,
+                  children: [
+                    Container(
+                      height: 4,
+                      margin: EdgeInsets.symmetric(
+                          vertical: mq.height * .015,
+                          horizontal: mq.width * .4),
+                      decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(8),
+                          color: Colors.grey),
+                    ),
+                    OptionItem(
+                        icon: const Icon(
+                          Icons.copy_all_outlined,
+                          color: Colors.blue,
+                          size: 26,
+                        ),
+                        name: 'Copy Text',
+                        onTap: () {}),
+                    Divider(
+                      color: Colors.grey,
+                      endIndent: mq.width * .04,
+                      indent: mq.width * .04,
+                    ),
+                    OptionItem(
+                        icon: const Icon(
+                          Icons.edit,
+                          color: Colors.blue,
+                          size: 26,
+                        ),
+                        name: 'Edit Message',
+                        onTap: () {}),
+                    OptionItem(
+                        icon: const Icon(
+                          Icons.delete,
+                          color: Colors.red,
+                          size: 26,
+                        ),
+                        name: 'Delete Message',
+                        onTap: () {}),
+                    Divider(
+                      color: Colors.grey,
+                      endIndent: mq.width * .04,
+                      indent: mq.width * .04,
+                    ),
+                    OptionItem(
+                        icon: const Icon(
+                          Icons.remove_red_eye,
+                          color: Colors.blue,
+                        ),
+                        name: 'Sent At',
+                        onTap: () {}),
+                    OptionItem(
+                        icon: const Icon(
+                          Icons.remove_red_eye,
+                          color: Colors.green,
+                        ),
+                        name: 'Read At',
+                        onTap: () {})
+                  ],
+                );
+              });
+        },
+        child: FireStoreServices().auth!.uid == message.fromId
+            ? _greenMessage(mq, context)
+            : _blueMessage(mq, context));
   }
 
   // sender message
@@ -142,6 +215,39 @@ class MessageCard extends StatelessWidget {
           ),
         ),
       ],
+    );
+  }
+}
+
+class OptionItem extends StatelessWidget {
+  const OptionItem(
+      {super.key, required this.icon, required this.name, required this.onTap});
+  final Icon icon;
+  final String name;
+  final VoidCallback onTap;
+  @override
+  Widget build(BuildContext context) {
+    final mq = MediaQuery.of(context).size;
+
+    return InkWell(
+      onTap: () => onTap(),
+      child: Padding(
+        padding: EdgeInsets.only(
+            left: mq.width * .05,
+            top: mq.height * .012,
+            bottom: mq.height * .02),
+        child: Row(
+          children: [
+            icon,
+            Flexible(
+                child: Text(
+              '    $name',
+              style: const TextStyle(
+                  fontSize: 15, color: Colors.black54, letterSpacing: 0.5),
+            ))
+          ],
+        ),
+      ),
     );
   }
 }
