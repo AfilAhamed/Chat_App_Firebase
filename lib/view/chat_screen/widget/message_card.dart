@@ -54,7 +54,8 @@ class MessageCard extends StatelessWidget {
                       endIndent: mq.width * .04,
                       indent: mq.width * .04,
                     ),
-                    if (message.type == Type.text)
+                    if (message.type == Type.text &&
+                        FireStoreServices().auth!.uid == message.fromId)
                       OptionItem(
                           icon: const Icon(
                             Icons.edit,
@@ -63,19 +64,21 @@ class MessageCard extends StatelessWidget {
                           ),
                           name: 'Edit Message',
                           onTap: () {}),
-                    OptionItem(
-                        icon: const Icon(
-                          Icons.delete,
-                          color: Colors.red,
-                          size: 26,
-                        ),
-                        name: 'Delete Message',
-                        onTap: () {}),
-                    Divider(
-                      color: Colors.grey,
-                      endIndent: mq.width * .04,
-                      indent: mq.width * .04,
-                    ),
+                    if (FireStoreServices().auth!.uid == message.fromId)
+                      OptionItem(
+                          icon: const Icon(
+                            Icons.delete,
+                            color: Colors.red,
+                            size: 26,
+                          ),
+                          name: 'Delete Message',
+                          onTap: () {}),
+                    if (FireStoreServices().auth!.uid == message.fromId)
+                      Divider(
+                        color: Colors.grey,
+                        endIndent: mq.width * .04,
+                        indent: mq.width * .04,
+                      ),
                     OptionItem(
                         icon: const Icon(
                           Icons.remove_red_eye,
