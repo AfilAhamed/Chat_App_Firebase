@@ -32,27 +32,37 @@ class MessageCard extends StatelessWidget {
                           borderRadius: BorderRadius.circular(8),
                           color: Colors.grey),
                     ),
-                    OptionItem(
-                        icon: const Icon(
-                          Icons.copy_all_outlined,
-                          color: Colors.blue,
-                          size: 26,
-                        ),
-                        name: 'Copy Text',
-                        onTap: () {}),
+                    message.type == Type.text
+                        ? OptionItem(
+                            icon: const Icon(
+                              Icons.copy_all_outlined,
+                              color: Colors.blue,
+                              size: 26,
+                            ),
+                            name: 'Copy Text',
+                            onTap: () {})
+                        : OptionItem(
+                            icon: const Icon(
+                              Icons.download,
+                              color: Colors.blue,
+                              size: 26,
+                            ),
+                            name: 'Save Image',
+                            onTap: () {}),
                     Divider(
                       color: Colors.grey,
                       endIndent: mq.width * .04,
                       indent: mq.width * .04,
                     ),
-                    OptionItem(
-                        icon: const Icon(
-                          Icons.edit,
-                          color: Colors.blue,
-                          size: 26,
-                        ),
-                        name: 'Edit Message',
-                        onTap: () {}),
+                    if (message.type == Type.text)
+                      OptionItem(
+                          icon: const Icon(
+                            Icons.edit,
+                            color: Colors.blue,
+                            size: 26,
+                          ),
+                          name: 'Edit Message',
+                          onTap: () {}),
                     OptionItem(
                         icon: const Icon(
                           Icons.delete,
@@ -235,7 +245,7 @@ class OptionItem extends StatelessWidget {
         padding: EdgeInsets.only(
             left: mq.width * .05,
             top: mq.height * .012,
-            bottom: mq.height * .02),
+            bottom: mq.height * .015),
         child: Row(
           children: [
             icon,
