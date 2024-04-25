@@ -78,7 +78,7 @@ class MessageCard extends StatelessWidget {
                             showDialog(
                               context: context,
                               builder: (context) => AlertDialog(
-                                contentPadding: EdgeInsets.only(
+                                contentPadding: const EdgeInsets.only(
                                     left: 24, right: 24, top: 20, bottom: 10),
                                 shape: RoundedRectangleBorder(
                                     borderRadius: BorderRadius.circular(20)),
