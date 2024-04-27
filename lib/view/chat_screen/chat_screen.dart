@@ -96,7 +96,7 @@ class _ChatScreenState extends State<ChatScreen> {
                               ),
                               Text(
                                 list.isNotEmpty
-                                    ? !list[0].isOnline
+                                    ? list[0].isOnline
                                         ? 'Online'
                                         : DateUtil().getLastActiveTime(
                                             context: context,

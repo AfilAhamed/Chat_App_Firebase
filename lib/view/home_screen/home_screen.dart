@@ -1,5 +1,4 @@
 import 'dart:developer';
-
 import 'package:chat_app/controller/search_controller.dart';
 import 'package:chat_app/model/user_model.dart';
 import 'package:chat_app/services/firestore_services.dart';
@@ -159,12 +158,64 @@ class _HomeScreenState extends State<HomeScreen> {
             ),
             floatingActionButton: FloatingActionButton(
               backgroundColor: Colors.blueAccent,
-              onPressed: () {},
+              onPressed: () {
+                String email = '';
+                showDialog(
+                  context: context,
+                  builder: (context) => AlertDialog(
+                    contentPadding: const EdgeInsets.only(
+                        left: 24, right: 24, top: 20, bottom: 10),
+                    shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(20)),
+                    title: const Row(
+                      children: [
+                        Icon(
+                          Icons.person,
+                          color: Colors.blue,
+                          size: 30,
+                        ),
+                        SizedBox(
+                          width: 5,
+                        ),
+                        Text('Add User'),
+                      ],
+                    ),
+                    content: TextFormField(
+                      maxLines: null,
+                      onChanged: (value) => email = value,
+                      initialValue: email,
+                      decoration: InputDecoration(
+                          border: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(15))),
+                    ),
+                    actions: [
+                      MaterialButton(
+                        onPressed: () {
+                          Navigator.pop(context);
+                        },
+                        child: const Text(
+                          "Cancel",
+                          style: TextStyle(color: Colors.blue, fontSize: 16),
+                        ),
+                      ),
+                      MaterialButton(
+                        onPressed: () {
+                          Navigator.pop(context);
+                        },
+                        child: const Text(
+                          "Add",
+                          style: TextStyle(color: Colors.blue, fontSize: 16),
+                        ),
+                      )
+                    ],
+                  ),
+                );
+              },
               elevation: 0,
-              tooltip: 'Messages',
+              tooltip: 'Add Users',
               splashColor: Colors.lightBlue,
               child: const Icon(
-                Icons.message_rounded,
+                Icons.add,
                 color: Colors.white,
                 size: 29,
               ),

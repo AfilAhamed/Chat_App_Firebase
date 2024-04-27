@@ -51,7 +51,7 @@ dependencies:
   page_transition: ^2.1.0
   emoji_picker_flutter: ^2.1.1
   firebase_messaging: ^14.7.19
-  http: ^1.2.1
+  http: ^1.2.0
   # flutter_notification_channel: ^3.0.0
 
 dev_dependencies:

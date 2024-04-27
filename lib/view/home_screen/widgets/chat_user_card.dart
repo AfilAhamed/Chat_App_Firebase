@@ -2,7 +2,6 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:chat_app/helpers/date_util.dart';
 import 'package:chat_app/model/message_model.dart';
 import 'package:chat_app/model/user_model.dart';
-import 'package:chat_app/services/auth_services.dart';
 import 'package:chat_app/services/firestore_services.dart';
 import 'package:chat_app/view/chat_screen/chat_screen.dart';
 import 'package:chat_app/view/widgets/profile_dailog.dart';
@@ -11,7 +10,7 @@ import 'package:flutter/material.dart';
 import 'package:page_transition/page_transition.dart';
 
 class ChatUserCardWidget extends StatelessWidget {
-  ChatUserCardWidget({super.key, required this.userModel});
+ const ChatUserCardWidget({super.key, required this.userModel});
   final UserModel userModel;
 
   @override

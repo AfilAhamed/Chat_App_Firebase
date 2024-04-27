@@ -1,16 +1,8 @@
-import 'dart:developer';
-import 'dart:io';
 import 'package:cached_network_image/cached_network_image.dart';
-import 'package:chat_app/controller/auth_controller.dart';
-import 'package:chat_app/helpers/dailogs.dart';
 import 'package:chat_app/helpers/date_util.dart';
 import 'package:chat_app/model/user_model.dart';
-import 'package:chat_app/services/firestore_services.dart';
-import 'package:chat_app/view/auth_screen/login_screen/login_screen.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:image_picker/image_picker.dart';
-import 'package:provider/provider.dart';
 
 class ViewUserProfile extends StatefulWidget {
   const ViewUserProfile({super.key, required this.userModel});
@@ -24,7 +16,7 @@ class ViewUserProfile extends StatefulWidget {
 class _ViewUserProfileState extends State<ViewUserProfile> {
   @override
   Widget build(BuildContext context) {
-    final provider = Provider.of<AuthController>(context);
+  //  final provider = Provider.of<AuthController>(context);
 
     final mq = MediaQuery.of(context).size;
     return SafeArea(
