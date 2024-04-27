@@ -6,7 +6,6 @@ import 'package:flutter/material.dart';
 class AuthController extends ChangeNotifier {
   final TextEditingController numberController = TextEditingController();
   final TextEditingController otpController = TextEditingController();
-
  
 
   //login using phone number

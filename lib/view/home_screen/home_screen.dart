@@ -1,5 +1,6 @@
 import 'dart:developer';
 import 'package:chat_app/controller/search_controller.dart';
+import 'package:chat_app/helpers/dailogs.dart';
 import 'package:chat_app/model/user_model.dart';
 import 'package:chat_app/services/firestore_services.dart';
 import 'package:chat_app/view/home_screen/widgets/chat_user_card.dart';
@@ -125,37 +126,56 @@ class _HomeScreenState extends State<HomeScreen> {
               ],
             ),
             body: StreamBuilder(
-              stream: FireStoreServices().getAllUsers(),
-              builder: (context, snapshoot) {
-                final data = snapshoot.data?.docs;
-                list =
-                    data?.map((e) => UserModel.fromJson(e.data())).toList() ??
-                        [];
-                if (snapshoot.connectionState == ConnectionState.waiting) {
-                  return const Center(
-                    child: CircularProgressIndicator(),
-                  );
-                } else if (list.isEmpty) {
-                  return const Center(
-                    child: Text('No Chats Found'),
-                  );
-                } else {
-                  return ListView.builder(
-                      physics: const BouncingScrollPhysics(),
-                      padding: const EdgeInsets.only(top: 8.0),
-                      itemCount: searchProvider.isSearching
-                          ? searchProvider.searchList.length
-                          : list.length,
-                      itemBuilder: (context, index) {
-                        return ChatUserCardWidget(
-                          userModel: searchProvider.isSearching
-                              ? searchProvider.searchList[index]
-                              : list[index],
-                        );
-                      });
-                }
-              },
-            ),
+                stream: FireStoreServices().getMyUsersId(),
+                builder: (context, snapshot) {
+                  switch (snapshot.connectionState) {
+                    case ConnectionState.waiting:
+                    case ConnectionState.none:
+                      // return const Center(
+                      //     child: CircularProgressIndicator(
+                      //   strokeWidth: 2,
+                      // ));
+                      
+                    case ConnectionState.active:
+                    case ConnectionState.done:
+                      return StreamBuilder(
+                        stream: FireStoreServices().getAllUsers(
+                            snapshot.data?.docs.map((e) => e.id).toList() ??
+                                []),
+                        builder: (context, snapshoot) {
+                          final data = snapshoot.data?.docs;
+                          list = data
+                                  ?.map((e) => UserModel.fromJson(e.data()))
+                                  .toList() ??
+                              [];
+                          if (snapshoot.connectionState ==
+                              ConnectionState.waiting) {
+                            return const Center(
+                              child: CircularProgressIndicator(),
+                            );
+                          } else if (list.isEmpty) {
+                            return const Center(
+                              child: Text('No Chats Found'),
+                            );
+                          } else {
+                            return ListView.builder(
+                                physics: const BouncingScrollPhysics(),
+                                padding: const EdgeInsets.only(top: 8.0),
+                                itemCount: searchProvider.isSearching
+                                    ? searchProvider.searchList.length
+                                    : list.length,
+                                itemBuilder: (context, index) {
+                                  return ChatUserCardWidget(
+                                    userModel: searchProvider.isSearching
+                                        ? searchProvider.searchList[index]
+                                        : list[index],
+                                  );
+                                });
+                          }
+                        },
+                      );
+                  }
+                }),
             floatingActionButton: FloatingActionButton(
               backgroundColor: Colors.blueAccent,
               onPressed: () {
@@ -185,6 +205,11 @@ class _HomeScreenState extends State<HomeScreen> {
                       onChanged: (value) => email = value,
                       initialValue: email,
                       decoration: InputDecoration(
+                          hintText: 'Email ID',
+                          prefixIcon: const Icon(
+                            Icons.email,
+                            color: Colors.blue,
+                          ),
                           border: OutlineInputBorder(
                               borderRadius: BorderRadius.circular(15))),
                     ),
@@ -199,8 +224,18 @@ class _HomeScreenState extends State<HomeScreen> {
                         ),
                       ),
                       MaterialButton(
-                        onPressed: () {
+                        onPressed: () async {
                           Navigator.pop(context);
+                          if (email.isNotEmpty) {
+                            await FireStoreServices()
+                                .addChatUser(email)
+                                .then((value) {
+                              if (!value) {
+                                Dailogas().showSnackBar(
+                                    context, 'User does not Exist');
+                              }
+                            });
+                          }
                         },
                         child: const Text(
                           "Add",
@@ -215,7 +250,7 @@ class _HomeScreenState extends State<HomeScreen> {
               tooltip: 'Add Users',
               splashColor: Colors.lightBlue,
               child: const Icon(
-                Icons.add,
+                Icons.person_add,
                 color: Colors.white,
                 size: 29,
               ),

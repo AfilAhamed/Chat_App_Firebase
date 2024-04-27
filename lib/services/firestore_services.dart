@@ -23,6 +23,30 @@ class FireStoreServices {
     return (await firestore.collection('users').doc(auth!.uid).get()).exists;
   }
 
+  // add chat user
+  Future<bool> addChatUser(String email) async {
+    final data = await firestore
+        .collection('users')
+        .where('email', isEqualTo: email)
+        .get();
+    log('data ${data.docs}');
+
+    if (data.docs.isNotEmpty && data.docs.first.id != auth!.uid) {
+      log('user exists ${data.docs.first.data()}');
+
+      firestore
+          .collection('users')
+          .doc(auth!.uid)
+          .collection('my_users')
+          .doc(data.docs.first.id)
+          .set({});
+
+      return true; //user exist
+    } else {
+      return false; //user dose not exist
+    }
+  }
+
   //create user
   Future<void> createUser() {
     final time = DateTime.now().millisecondsSinceEpoch.toString();
@@ -53,12 +77,35 @@ class FireStoreServices {
     });
   }
 
-  //get all users
-  Stream<QuerySnapshot<Map<String, dynamic>>> getAllUsers() {
+  //get my users id
+  Stream<QuerySnapshot<Map<String, dynamic>>> getMyUsersId() {
     return firestore
         .collection('users')
-        .where('id', isNotEqualTo: auth!.uid)
+        .doc(auth!.uid)
+        .collection('my_users')
         .snapshots();
+  }
+
+  //get all users
+  Stream<QuerySnapshot<Map<String, dynamic>>>? getAllUsers(
+      List<String> userIds) {
+    log(userIds.toString());
+    if (userIds.isNotEmpty) {
+      return firestore
+          .collection('users')
+          .where('id', whereIn: userIds)
+          .snapshots();
+    }
+    return null;
+  }
+ //send first message with creating my_users collection
+  Future<void> sendFirstMessage(UserModel user, String msg, Type type) async {
+    return await firestore
+        .collection('users')
+        .doc(user.id)
+        .collection('my_users')
+        .doc(auth!.uid)
+        .set({}).then((value) => sendMessages(user, msg, type));
   }
 
   // update user profile info
@@ -84,6 +131,7 @@ class FireStoreServices {
         .update({"image": me.image});
   }
 
+ //for getting user information
   Stream<QuerySnapshot<Map<String, dynamic>>> getUserInfo(UserModel chatUser) {
     return firestore
         .collection('users')
@@ -91,6 +139,7 @@ class FireStoreServices {
         .snapshots();
   }
 
+  // updare  online status 
   Future<void> updateActiveStatus(bool isOnline) async {
     firestore.collection('users').doc(auth!.uid).update({
       'is_online': isOnline,
@@ -99,9 +148,10 @@ class FireStoreServices {
     });
   }
 
+
   //-------------------Chat Functionality------------------------//
 
-  //conversation id
+  //conversation id (chat room)
   String getConversationId(String id) => auth!.uid.hashCode <= id.hashCode
       ? '${auth!.uid}_$id'
       : '${id}_${auth!.uid}';
@@ -180,6 +230,9 @@ class FireStoreServices {
         .doc(message.sendTime)
         .update({'msg': updatedMessage});
   }
+
+
+
 
   //-------------------Fcm Notification Functionality------------------------//
 

@@ -20,7 +20,7 @@ class ChatScreen extends StatefulWidget {
 }
 
 class _ChatScreenState extends State<ChatScreen> {
-  List<MessageModel> list = [];
+  List<MessageModel>? list = [];
   bool showEmoji = false, isUploading = false;
 
   TextEditingController messageController = TextEditingController();
@@ -122,25 +122,26 @@ class _ChatScreenState extends State<ChatScreen> {
                   child: StreamBuilder(
                     stream: FireStoreServices().getAllMessages(widget.user),
                     builder: (context, snapshoot) {
-                      final data = snapshoot.data!.docs;
-                      // log('data ${jsonEncode(data[0].data())}');
+                      final data = snapshoot.data?.docs;
                       list = data
-                          .map((e) => MessageModel.fromJson(e.data()))
+                          ?.map((e) => MessageModel.fromJson(e.data()))
                           .toList();
 
+                      
                       if (snapshoot.connectionState ==
-                          ConnectionState.waiting) {
+                              ConnectionState.waiting ||
+                          snapshoot.connectionState == ConnectionState.none) {
                         return const Center(
                           child: CircularProgressIndicator(),
                         );
-                      } else if (list.isNotEmpty) {
+                      } else if (list!.isNotEmpty) {
                         return ListView.builder(
                             reverse: true,
                             physics: const BouncingScrollPhysics(),
                             padding: const EdgeInsets.only(top: 8.0),
-                            itemCount: list.length,
+                            itemCount: list!.length,
                             itemBuilder: (context, index) {
-                              return MessageCard(message: list[index]);
+                              return MessageCard(message: list![index]);
                             });
                       } else {
                         return const Center(
@@ -161,7 +162,6 @@ class _ChatScreenState extends State<ChatScreen> {
                           strokeWidth: 2,
                         ),
                       )),
-                //-------------------------------------------------------
                 Padding(
                   padding: EdgeInsets.symmetric(
                       horizontal: mq.width * .025, vertical: mq.height * .01),
@@ -254,8 +254,13 @@ class _ChatScreenState extends State<ChatScreen> {
                       MaterialButton(
                         onPressed: () {
                           if (messageController.text.isNotEmpty) {
-                            FireStoreServices().sendMessages(
-                                widget.user, messageController.text, Type.text);
+                            if (list!.isEmpty) {
+                              FireStoreServices().sendFirstMessage(widget.user,
+                                  messageController.text, Type.text);
+                            } else {
+                              FireStoreServices().sendMessages(widget.user,
+                                  messageController.text, Type.text);
+                            }
                             messageController.text = '';
                           }
                         },
@@ -281,7 +286,6 @@ class _ChatScreenState extends State<ChatScreen> {
                       categoryViewConfig: const CategoryViewConfig(
                           backgroundColor: Color.fromARGB(255, 234, 248, 255)),
                       height: mq.height * .38,
-                      // checkPlatformCompatibility: true,
                       emojiViewConfig: EmojiViewConfig(
                         backgroundColor:
                             const Color.fromARGB(255, 234, 248, 255),

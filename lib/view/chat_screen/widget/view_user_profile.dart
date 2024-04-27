@@ -16,7 +16,6 @@ class ViewUserProfile extends StatefulWidget {
 class _ViewUserProfileState extends State<ViewUserProfile> {
   @override
   Widget build(BuildContext context) {
-  //  final provider = Provider.of<AuthController>(context);
 
     final mq = MediaQuery.of(context).size;
     return SafeArea(

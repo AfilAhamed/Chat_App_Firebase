@@ -41,7 +41,6 @@ class AuthServices {
   //otp Submit
   Future<void> otpSumbit(String otpController, verificationId) async {
     final String otp = otpController;
-    print(otp);
     AuthCredential credential = PhoneAuthProvider.credential(
         smsCode: otp, verificationId: verificationId);
 
@@ -49,6 +48,9 @@ class AuthServices {
         (await FirebaseAuth.instance.signInWithCredential(credential)).user!;
     log(user.toString());
   }
+
+
+  
 
   //***********************Google Auth*****************************//
 

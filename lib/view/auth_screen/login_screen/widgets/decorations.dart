@@ -35,27 +35,5 @@ InputDecoration inputDecration(
           ),
         ),
       ),
-      // suffixIcon: phoneController.text.length == 10
-      //     ? Container(
-      //         height: 10,
-      //         width: 10,
-      //         decoration: const BoxDecoration(
-      //             shape: BoxShape.circle, color: Colors.green),
-      //         child: const Icon(
-      //           Icons.close,
-      //           color: Colors.white,
-      //         ),
-      //       )
-      // : Container(
-      //     height: 1,
-      //     width: 1,
-      //     decoration:
-      //         BoxDecoration(shape: BoxShape.circle, color: Colors.red),
-      //     child: Icon(
-      //       Icons.close,
-      //       size: 15,
-      //       color: Colors.white,
-      //     ),
-      //   ),
-      border: OutlineInputBorder(borderRadius: BorderRadius.circular(10.0)));
+           border: OutlineInputBorder(borderRadius: BorderRadius.circular(10.0)));
 }

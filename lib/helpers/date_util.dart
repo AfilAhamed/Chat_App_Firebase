@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 
 class DateUtil {
+
+
   //formated time
   String getFormatedDate(
       {required BuildContext context, required String time}) {
@@ -8,6 +10,7 @@ class DateUtil {
     return TimeOfDay.fromDateTime(date).format(context);
   }
 
+ //get user last message time
   String getLastMessageTime(
       {required BuildContext context,
       required String time,
@@ -25,6 +28,7 @@ class DateUtil {
         : '${sent.day} ${getMonth(sent)}';
   }
 
+ // get formated month
   String getMonth(DateTime date) {
     switch (date.month) {
       case 1:
@@ -56,8 +60,8 @@ class DateUtil {
     }
   }
 
-  //get formated last active time of user in chat screen
 
+  //get formated last active time of user in chat screen
   String getLastActiveTime(
       {required BuildContext context, required String lastActive}) {
     final int i = int.tryParse(lastActive) ?? -1;
@@ -81,6 +85,8 @@ class DateUtil {
     return 'Last seen on ${time.day} $month on $formattedTime';
   }
 
+
+  // get user  message time
   getMessageTime({required BuildContext context, required String time}) {
     final DateTime sent = DateTime.fromMillisecondsSinceEpoch(int.parse(time));
     final DateTime now = DateTime.now();
